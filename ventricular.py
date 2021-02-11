@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
-# Relative contributions of the major ionic currents in human atrial models.
+# Relative contributions of the major ionic currents in human ventricular
+# models.
 #
 import os
 import matplotlib
@@ -20,167 +21,104 @@ matplotlib.rcParams['mathtext.default'] = 'regular'
 # Current colors
 cmap = matplotlib.cm.get_cmap('tab20')
 current_names = [
-    'I_Kur',    # 0
-    'I_to',     # 1
-    'I_Cl,B',   # 2
-    'I_CaL',    # 3
-    'I_NaCa',   # 4
-    'I_Kr',     # 5
-    'I_Ks',     # 6
-    'I_K1',     # 7
-    'I_NaK',    # 8
-    'I_Ca,P',   # 9
-    'I_Ca,B',   # 10
-    'I_Na,B',   # 11
-    'I_KACh',   # 12
-    'I_ClCa',   # 13
-    'I_Kp',     # 14
-    'I_f',      # 15
-    'I_Na',     # 16
-    'I_NaL',    # 17
+    'I_ClCa',    # 0
+    'I_NaCa',    # 1
+    'I_to',      # 2
+    'I_Kb',      # 3
+    'I_Kr',      # 4
+    'I_Ks',      # 5
+    'I_Cl,B',    # 6
+    'I_K,ATP',   # 7
+    'I_K1',      # 8
+    'I_NaK',     # 9
+    'I_CaL',     # 10
+    'I_NaL',     # 11
+    'I_Na,B',    # 12
+    'I_Ca,B',    # 13
+    'I_Na',      # 14
+    'I_Ca,P',    # 15
 ]
 
 # Human atrial models
 model_names = {
-    'courtemanche': 'courtemanche-1998.mmt',
-    'grandi': 'grandi-2011.mmt',
-    'koivumaki': 'koivumaki-2011.mmt',
-    'maleckar': 'maleckar-2008.mmt',
-    'ni': 'ni-2017.mmt',
-    'nygren': 'nygren-1998.mmt',
-    'voigt': 'voigt-heijman-2013.mmt',
+    'priebe': 'priebe-1998.mmt',
+    #'iyer': 'iyer-2004.mmt',
+    'grandi': 'grandi-2010.mmt',
+    #'tnnp1': 'tentusscher-2004.mmt',
+    #'tnnp2': 'tentusscher-2006.mmt',
+    #'ohara': 'ohara-2011.mmt',
+    #'cipa': 'ohara-cipa-v1-2017.mmt',
+    'tomek': 'tomek-2020-chloride-epi.mmt',
 }
 
 fancy_names = {
-    'courtemanche': 'Courtemanche et al., 1998',
-    'grandi': 'Grandi-Pandit-Voigt et al., 2011',
-    'koivumaki': 'Koivumaki et al., 2011',
-    'maleckar': 'Maleckar et al., 2008',
-    'ni': 'Ni et al., 2017',
-    'nygren': 'Nygren et al., 1998',
-    'voigt': 'Voigt-Heijman et al., 2013',
+    'priebe': 'Priebe & Beuckelmann, 1998',
+    'iyer': 'Iyer et al., 2004 (epi)',
+    'grandi': 'Grandi et al., 2010 (epi)',
+    'tnnp1': 'Ten Tusscher et al., 2004 (epi)',
+    'tnnp2': 'Ten Tusscher & Panfilov 2006 (epi)',
+    'ohara': 'O\'Hara et al., 2011 (epi)',
+    'cipa': 'O\'Hara et al., 2017 CiPA (epi)',
+    'tomek': 'Tomek et al., 2020 (epi)',
 }
 
 
 def current_variables(model, colours=False):
     """ Returns an ordered list of transmembrane current variable names. """
     name = model.name().lower()
-    if 'courtemanche-1998' in name:
+    if 'priebe' in name:
         currents = {
-            'ikur.i_Kur': 0,
-            'ito.i_to': 1,
-            'ical.i_Ca_L': 3,
-            'inaca.i_NaCa': 4,
-            'ikr.i_Kr': 5,
-            'iks.i_Ks': 6,
-            'ik1.i_K1': 7,
-            'inak.i_NaK': 8,
-            'ipca.i_PCa': 9,
-            'ib.i_B_Ca': 10,
-            'ib.i_B_Na': 11,
-            'ina.i_Na': 16,
+            'inaca.i_NaCa': 1,
+            'ito.i_to': 2,
+            'ikr.i_Kr': 4,
+            'iks.i_Ks': 5,
+            'ik1.i_K1': 8,
+            'inak.i_NaK': 9,
+            'ica.i_Ca': 10,
+            'inab.i_b_Na': 12,
+            'icab.i_b_Ca': 13,
+            'ina.i_Na': 14,
         }
-    elif 'grandi-2011' in name:
+    elif 'grandi' in name:
         currents = {
-            'ikur.IKur': 0,
-            'ito.Ito': 1,
-            'iclb.IClB': 2,
-            'ical.ICaL': 3,
-            'inaca.INaCa': 4,
-            'ikr.IKr': 5,
-            'iks.IKs': 6,
-            'ik1.IK1': 7,
-            'inak.INaK': 8,
-            'ipca.IpCa': 9,
-            'icab.ICaB': 10,
-            'inab.INaB': 11,
-            'iclca.IClCa': 13,
-            'ikp.IKp': 14,
-            'ina.INa': 16,
-            'inal.INaL': 17,
+            'iclca.iclca': 0,
+            'incx.I_ncx': 1,
+            'ito.ito': 2,
+            'ikp.I_kp': 3,
+            'ikr.I_kr': 4,
+            'iks.I_ks': 5,
+            'iclb.IClb': 6,
+            'ik1.I_k1': 8,
+            'inak.I_nak': 9,
+            'ical.I_CaL': 10,
+            'inab.I_nabk': 12,
+            'icabk.I_cabk': 13,
+            'ina.I_Na': 14,
+            'ipca.I_pca': 15,
         }
-    elif 'koivumaki' in name:
+    elif 'torord' in name:
         currents = {
-            'ikur.IKur': 0,
-            'it.It': 1,
-            'ical.ICaL': 3,
-            'inaca.INaCa': 4,
-            'ikr.IKr': 5,
-            'iks.IKs': 6,
-            'ik1.IK1': 7,
-            'inak.INaK': 8,
-            'icap.ICaP': 9,
-            'icab.ICab': 10,
-            'inab.INab': 11,
-            'if.If': 15,
-            'ina.INa': 16,
+            'ICl.IClCa': 0,
+            'INaCa.INaCa': 1,
+            'Ito.Ito': 2,
+            'IKb.IKb': 3,
+            'IKr.IKr': 4,
+            'IKs.IKs': 5,
+            'ICl.IClb': 6,
+            'I_katp.I_katp': 7,
+            'IK1.IK1': 8,
+            'INaK.INaK': 9,
+            'ICaL.ICaL': 10,
+            'INaL.INaL': 11,
+            'INab.INab': 12,
+            'ICab.ICab': 13,
+            'INa.INa': 14,
+            # TODO
+            'IpCa.IpCa': 15,
+
+
         }
-    elif 'maleckar-' in name:
-        currents = {
-            'ikur.i_Kur': 0,
-            'it.i_t': 1,
-            'ical.i_Ca_L': 3,
-            'inaca.i_NaCa': 4,
-            'ikr.i_Kr': 5,
-            'iks.i_Ks': 6,
-            'ik1.i_K1': 7,
-            'inak.i_NaK': 8,
-            'icap.i_CaP': 9,
-            'ib.i_B_Ca': 10,
-            'ib.i_B_Na': 11,
-            'ikach.i_KACh': 12,
-            'ina.i_Na': 16,
-        }
-    elif 'ni-' in name:
-        currents = {
-            'ikur.IKur': 0,
-            'ito.Ito': 1,
-            'ical.ICaL': 3,
-            'inaca.INaCa': 4,
-            'ikr.IKr': 5,
-            'iks.IKs': 6,
-            'ik1.IK1': 7,
-            'inak.INaK': 8,
-            'icap.ICap': 9,
-            'ibca.IbCa': 10,
-            'ibna.IbNa': 11,
-            'ina.INa': 16,
-        }
-    elif 'nygren' in name:
-        currents = {
-            'isus.i_sus': 0,
-            'it.i_t': 1,
-            'ical.iCaL': 3,
-            'inaca.i_NaCa': 4,
-            'ikr.i_Kr': 5,
-            'iks.i_Ks': 6,
-            'ik1.i_K1': 7,
-            'inak.i_NaK': 8,
-            'icap.i_CaP': 9,
-            'ib.i_B_Ca': 10,
-            'ib.i_B_Na': 11,
-            'ina.i_Na': 16,
-        }
-    elif 'voigt' in name:
-        currents = {
-            'ikur.IKur': 0,
-            'ito.Ito': 1,
-            'iclb.IClB': 2,
-            'ical.ICaL': 3,
-            'inaca.INaCa': 4,
-            'ikr.IKr': 5,
-            'iks.IKs': 6,
-            'ik1.IK1': 7,
-            'inak.INaK': 8,
-            'ipca.IpCa': 9,
-            'icab.ICaB': 10,
-            'inab.INaB': 11,
-            'ikach.IKACh': 12,
-            'iclca.IClCa': 13,
-            'ikp.IKp': 14,
-            'ina.INa': 16,
-            'inal.INaL': 17,
-        }
+
     else:
         currents = shared.guess_currents(model)
         print('\n'.join(currents))
@@ -202,9 +140,9 @@ protocol = myokit.pacing.blocktrain(cl, duration=0.5, offset=50)
 models = {}
 for name, fname in model_names.items():
     pre_pace = True
-    if 'koiv' in name:
+    if 'priebe' in name:
         pre_pace = False
-    model = myokit.load_model(os.path.join('models', 'atrial', fname))
+    model = myokit.load_model(os.path.join('models', 'ventricular', fname))
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
 
@@ -221,10 +159,10 @@ fig.subplots_adjust(0.075, 0.05, 0.98, 0.97, hspace=0.35, wspace=0.2)
 grid = GridSpec(3, 3)
 
 #
-# Top row: Nygren models
+# Top row: Various models
 #
-# Nygren 1998
-code = 'nygren'
+# Priebe 1998
+code = 'priebe'
 model = models[code]
 currents, colours = current_variables(model, True)
 s = myokit.Simulation(model, protocol)
@@ -237,7 +175,7 @@ ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
 mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
-
+'''
 text(ax, 0.950, 0.870, 'INaK')
 text(ax, 0.950, 0.640, 'IK1')
 text(ax, 0.950, 0.420, 'INaCa')
@@ -249,7 +187,8 @@ text(ax, 0.300, 0.880, 'Ito')
 ax.arrow(0.20, 0.88, -0.11, -0.08, transform=ax.transAxes, zorder=999)
 text(ax, 0.400, 0.06, 'INa')
 ax.arrow(0.28, 0.06, -0.09, -0.03, transform=ax.transAxes, zorder=999)
-
+'''
+'''
 # Maleckar 2009
 code = 'maleckar'
 model = models[code]
@@ -275,9 +214,10 @@ text(ax, 0.300, 0.900, 'Ito')
 ax.arrow(0.20, 0.90, -0.11, -0.08, transform=ax.transAxes, zorder=999)
 text(ax, 0.380, 0.06, 'INa')
 ax.arrow(0.26, 0.06, -0.09, -0.03, transform=ax.transAxes, zorder=999)
+'''
 
-# Koivumaki 2011
-code = 'koivumaki'
+# Grandi 2010
+code = 'grandi'
 model = models[code]
 currents, colours = current_variables(model, True)
 s = myokit.Simulation(model, protocol)
@@ -290,6 +230,7 @@ ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
 mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+'''
 text(ax, 0.950, 0.880, 'INaK')
 text(ax, 0.950, 0.640, 'IK1')
 text(ax, 0.950, 0.440, 'INaCa')
@@ -301,7 +242,8 @@ text(ax, 0.300, 0.880, 'Ito')
 ax.arrow(0.20, 0.88, -0.11, -0.08, transform=ax.transAxes, zorder=999)
 text(ax, 0.360, 0.053, 'INa')
 ax.arrow(0.24, 0.053, -0.09, -0.03, transform=ax.transAxes, zorder=999)
-
+'''
+'''
 #
 # Middle row: Courtemanche models
 #
@@ -364,7 +306,7 @@ text(ax, 0.480, 0.640, 'IKr')
 ax.arrow(0.380, 0.640, -0.086, -0.030, transform=ax.transAxes, zorder=999)
 
 #
-# Bottom row: Grandi models
+# Bottom row: O'Hara models
 #
 # Grandi 2011
 code = 'grandi'
@@ -417,6 +359,36 @@ text(ax, 0.300, 0.900, 'Ito')
 ax.arrow(0.202, 0.900, -0.098, -0.120, transform=ax.transAxes, zorder=999)
 text(ax, 0.510, 0.640, 'IKr')
 ax.arrow(0.410, 0.640, -0.086, -0.030, transform=ax.transAxes, zorder=999)
+'''
+
+# Tomek et al. 2020
+code = 'tomek'
+model = models[code]
+currents, colours = current_variables(model, True)
+s = myokit.Simulation(model, protocol)
+s.set_tolerance(1e-8, 1e-8)
+d = s.run(tmax)
+ax = fig.add_subplot(grid[2, 2])
+ax.set_title(fancy_names[code])
+ax.set_xlabel('Time (s)')
+ax.set_yticklabels([])
+ax.set_xlim(0, tmax)
+ax.set_ylim(-1.02, 1.02)
+mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+'''
+text(ax, 0.950, 0.865, 'INaK')
+text(ax, 0.950, 0.625, 'IK1')
+text(ax, 0.950, 0.423, 'ICl,B')
+text(ax, 0.950, 0.306, 'INaCa')
+text(ax, 0.950, 0.189, 'ICa,B')
+text(ax, 0.950, 0.061, 'INa,B')
+text(ax, 0.207, 0.542, 'IKur')
+text(ax, 0.230, 0.440, 'ICaL')
+text(ax, 0.300, 0.900, 'Ito')
+ax.arrow(0.202, 0.900, -0.098, -0.120, transform=ax.transAxes, zorder=999)
+text(ax, 0.510, 0.640, 'IKr')
+ax.arrow(0.410, 0.640, -0.086, -0.030, transform=ax.transAxes, zorder=999)
+'''
 
 #
 # Legend
@@ -429,11 +401,11 @@ lines = []
 for i, current in enumerate(current_names):
     lines.append(matplotlib.lines.Line2D([0], [0], color=cmap(i), lw=5))
 labels = [x.replace('_', '') for x in current_names]
-#ax.legend(lines, labels, loc=(0.05, 0.05), ncol=2)
-ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
+ax.legend(lines, labels, loc=(0.05, 0.05), ncol=2)
+#ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
 
 
 # Show / store
-plt.savefig('atrial.png')
-plt.savefig('atrial.pdf')
+plt.savefig('ventricular.png')
+plt.savefig('ventricular.pdf')
 print('Done')

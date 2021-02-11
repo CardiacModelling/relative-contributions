@@ -23,18 +23,24 @@ def prepare_model(model, protocol, currents, pre_pace=True):
     # Get model variables
     t = model.timex()
     v = model.labelx('membrane_potential')
-    C = model.labelx('membrane_capacitance')
 
     # Check variables have units
-    variables = [v, t, C]
-    for var in variables:
+    for var in (v, t):
         if var.unit() is None:
             raise ValueError(
                 'No unit set for ' + str(var) + ' in ' + str(model))
 
+    # Optionally get capacitance
+    helpers = []
+    C = model.label('membrane_capacitance')
+    if C is not None:
+        if C.unit() is None:
+            raise ValueError(
+                'No unit set for ' + str(C) + ' in ' + str(model))
+        helpers.append(C.rhs())
+
     # Convert variable units
     i_unit = 'A/F'
-    helpers = [C.rhs()]
     v.convert_unit('mV')
     for qname in currents:
         var = model.get(qname)
@@ -74,7 +80,7 @@ def demote(var):
     var.demote()
 
 
-def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=4000,
+def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=10000,
                 max_period=10, path=None):
     """
     Pre-paces a model to periodic orbit ("steady state").
@@ -91,7 +97,7 @@ def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=4000,
 
     # Create simulation
     s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
+    s.set_tolerance(1e-9, 1e-9)
     if cl is None:
         cl = protocol.characteristic_time()
 
@@ -165,4 +171,20 @@ def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=4000,
         print('Final dx: ' + str(np.max(dx)))
 
     return s.state()
+
+
+def guess_currents(model):
+    """ Guess all transmembrane currents in a given ``model``. """
+    def rec(parent, currents=set()):
+        for var in parent.refs_to():
+            if 'tot' in var.name():
+                rec(var, currents)
+            else:
+                currents.add(var)
+        return currents
+
+    currents = rec(model.labelx('cellular_current'))
+    currents = [x.qname() for x in currents]
+    currents.sort()
+    return currents
 
