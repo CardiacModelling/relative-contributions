@@ -115,10 +115,10 @@ def current_variables(model, colours=False):
         }
     elif 'courtemanche-1998' in name:
         currents = {
+            'I_NaCa': 'inaca.i_NaCa',
             'I_Kur': 'ikur.i_Kur',
             'I_to': 'ito.i_to',
             'I_CaL': 'ical.i_Ca_L',
-            'I_NaCa': 'inaca.i_NaCa',
             'I_Kr': 'ikr.i_Kr',
             'I_Ks': 'iks.i_Ks',
             'I_K1': 'ik1.i_K1',
@@ -145,9 +145,9 @@ def current_variables(model, colours=False):
         }
     elif 'grandi-2011' in name:
         currents = {
+            'I_Cl,B': 'iclb.IClB',
             'I_Kur': 'ikur.IKur',
             'I_to': 'ito.Ito',
-            'I_Cl,B': 'iclb.IClB',
             'I_CaL': 'ical.ICaL',
             'I_NaCa': 'inaca.INaCa',
             'I_Kr': 'ikr.IKr',
@@ -164,9 +164,9 @@ def current_variables(model, colours=False):
         }
     elif 'voigt' in name:
         currents = {
+            'I_Cl,B': 'iclb.IClB',
             'I_Kur': 'ikur.IKur',
             'I_to': 'ito.Ito',
-            'I_Cl,B': 'iclb.IClB',
             'I_CaL': 'ical.ICaL',
             'I_NaCa': 'inaca.INaCa',
             'I_Kr': 'ikr.IKr',

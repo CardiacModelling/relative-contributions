@@ -78,8 +78,8 @@ def current_variables(model, colours=False):
             'I_K1': 'ik1.i_K1',
             'I_NaK': 'inak.i_NaK',
             'I_CaL': 'ica.i_Ca',
-            'I_Na,B': 'inab.i_b_Na',
             'I_Ca,B': 'icab.i_b_Ca',
+            'I_Na,B': 'inab.i_b_Na',
             'I_Na': 'ina.i_Na',
         }
     elif 'iyer' in name:
@@ -92,8 +92,8 @@ def current_variables(model, colours=False):
             'I_K1': 'ik1.ik1',
             'I_NaK': 'inak.inak',
             'I_CaL': 'ical.ICa_total',
-            'I_Na,B': 'inab.inab',
             'I_Ca,B': 'icab.icab',
+            'I_Na,B': 'inab.inab',
             'I_Na': 'ina.ina',
         }
     elif 'grandi' in name:
@@ -109,8 +109,8 @@ def current_variables(model, colours=False):
             'I_NaK': 'inak.I_nak',
             'I_CaL': 'ical.I_CaL',
             'I_NaCa': 'incx.I_ncx',
-            'I_Na,B': 'inab.I_nabk',
             'I_Ca,B': 'icabk.I_cabk',
+            'I_Na,B': 'inab.I_nabk',
             'I_Na': 'ina.I_Na',
         }
     elif 'tusscher_2004' in name:
@@ -124,8 +124,8 @@ def current_variables(model, colours=False):
             'I_NaK': 'inak.INaK',
             'I_Ca,P': 'ipca.IpCa',
             'I_CaL': 'ical.ICaL',
-            'I_Na,B': 'inab.INab',
             'I_Ca,B': 'icab.ICab',
+            'I_Na,B': 'inab.INab',
             'I_Na': 'ina.INa',
         }
     elif 'tusscher-2006' in name:
@@ -139,8 +139,8 @@ def current_variables(model, colours=False):
             'I_NaK': 'inak.INaK',
             'I_Ca,P': 'ipca.IpCa',
             'I_CaL': 'ical.ICaL',
-            'I_Na,B': 'inab.INab',
             'I_Ca,B': 'icab.ICab',
+            'I_Na,B': 'inab.INab',
             'I_Na': 'ina.INa',
         }
     elif 'ohara-2011' in name:
@@ -171,8 +171,8 @@ def current_variables(model, colours=False):
             'I_CaL': 'ical.ICaL_total',
             'I_NaL': 'inal.INaL',
             'I_NaCa': 'inaca.INaCa_total',
-            'I_Na,B': 'inab.INab',
             'I_Ca,B': 'icab.ICab',
+            'I_Na,B': 'inab.INab',
             'I_Na': 'ina.INa',
         }
     elif 'torord' in name:
@@ -190,8 +190,8 @@ def current_variables(model, colours=False):
             'I_CaL': 'ICaL.ICaL',
             'I_NaL': 'INaL.INaL',
             'I_NaCa': 'INaCa.INaCa',
-            'I_Na,B': 'INab.INab',
             'I_Ca,B': 'ICab.ICab',
+            'I_Na,B': 'INab.INab',
             'I_Na': 'INa.INa',
         }
 
