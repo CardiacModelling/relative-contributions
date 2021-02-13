@@ -25,18 +25,21 @@ current_colours = {
     'I_Ks': 1,
     'I_to': 2,
     'I_Kb': 3,
+    # I_f
+    # I_Kur
     'I_K1': 4,
     'I_NaK': 5,
-    'I_Na': 6,
-    'I_NaL': 7,
-    'I_CaL': 8,
-    'I_NaCa': 9,
-    'I_Na,B': 10,
-    'I_Ca,B': 11,
-    'I_ClCa': 12,
-    'I_Cl,B': 13,
+    'I_Na': 16,
+    'I_NaL': 17,
+    'I_CaL': 10,
+    'I_NaCa': 11,
+    'I_Na,B': 12,
+    'I_Ca,B': 13,
+    'I_ClCa': 6,
+    'I_Cl,B': 7,
     'I_Ca,P': 14,
-    'I_K,ATP': 15,
+    'I_K,ACh': 18,
+    'I_K,ATP': 19,
 }
 
 # Human atrial models
@@ -96,8 +99,8 @@ def current_variables(model, colours=False):
     elif 'grandi' in name:
         currents = {
             'I_Cl,B': 'iclb.IClb',
-            'I_to': 'ito.ito',
             'I_ClCa': 'iclca.iclca',
+            'I_to': 'ito.ito',
             'I_Kb': 'ikp.I_kp',
             'I_Ks': 'iks.I_ks',
             'I_Kr': 'ikr.I_kr',
@@ -117,9 +120,9 @@ def current_variables(model, colours=False):
             'I_Kb': 'ipk.IpK',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
-            'I_Ca,P': 'ipca.IpCa',
             'I_K1': 'ik1.IK1',
             'I_NaK': 'inak.INaK',
+            'I_Ca,P': 'ipca.IpCa',
             'I_CaL': 'ical.ICaL',
             'I_Na,B': 'inab.INab',
             'I_Ca,B': 'icab.ICab',
@@ -131,10 +134,10 @@ def current_variables(model, colours=False):
             'I_Kb': 'ipk.IpK',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
-            'I_Ca,P': 'ipca.IpCa',
             'I_K1': 'ik1.IK1',
             'I_NaCa': 'inaca.INaCa',
             'I_NaK': 'inak.INaK',
+            'I_Ca,P': 'ipca.IpCa',
             'I_CaL': 'ical.ICaL',
             'I_Na,B': 'inab.INab',
             'I_Ca,B': 'icab.ICab',
@@ -175,8 +178,8 @@ def current_variables(model, colours=False):
     elif 'torord' in name:
         currents = {
             'I_Cl,B': 'ICl.IClb',
-            'I_to': 'Ito.Ito',
             'I_ClCa': 'ICl.IClCa',
+            'I_to': 'Ito.Ito',
             'I_Kb': 'IKb.IKb',
             'I_Ks': 'IKs.IKs',
             'I_Kr': 'IKr.IKr',
