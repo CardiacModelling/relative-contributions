@@ -60,23 +60,24 @@ documentation: """
     """
 file_author: Michael Clerx
 # Initial values (ordered as in the original code)
-membrane.V   = -86.2
-calcium.Cai  = 0.0002
-calcium.CaSR = 0.2
-sodium.Nai   = 11.6
-potassium.Ki = 138.3
-ina.m        = 0
-ina.h        = 0.75
-ina.j        = 0.75
-ikr.xr1      = 0
-ikr.xr2      = 1
-iks.xs       = 0
-ito.r        = 0
-ito.s        = 1
-ical.d       = 0
-ical.f       = 1
-ical.fCa     = 1
-jrel.g       = 1
+membrane.V   = -8.61731284645399427e+01
+calcium.Cai  =  7.19648633286530372e-05
+calcium.CaSR =  5.74472825069649806e-01
+sodium.Nai   =  1.20062175658021371e+01
+potassium.Ki =  1.37531253615778922e+02
+ina.m        =  1.40354419012241635e-03
+ina.h        =  7.69842328528802189e-01
+ina.j        =  7.69732310145407328e-01
+ikr.xr1      =  1.84941906432975164e-04
+ikr.xr2      =  4.80979096206992529e-01
+iks.xs       =  3.02420768759376372e-03
+ito.r        =  2.06509035826064330e-08
+ito.s        =  9.99998212311300705e-01
+ical.d       =  1.99336259161125567e-05
+ical.f       =  9.99798243078320992e-01
+ical.fCa     =  1.00591722504675829e+00
+jrel.g       =  9.99924393178542203e-01
+
 
 #
 # External inputs
@@ -510,7 +511,7 @@ IK_total = ik1.IK1 + ito.Ito + ikr.IKr + iks.IKs + ipk.IpK + stimulus.i_stim - 2
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier
-1.0      10.0     1.0      1000.0   0
+1.0      50.0     0.5      1000.0   0
 
 [[script]]
 import matplotlib.pyplot as plt

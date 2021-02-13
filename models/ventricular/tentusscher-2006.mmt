@@ -66,25 +66,25 @@ desc: """
     """
 file_author: Michael Clerx
 # Initial values (ordered as in the original code)
-membrane.V   = -85.23
-calcium.Cai  = 0.000126
-calcium.CaSR = 3.64
-calcium.CaSS = 0.00036
-sodium.Nai   = 8.604
-potassium.Ki = 136.89
-ina.m        = 0.00172
-ina.h        = 0.7444
-ina.j        = 0.7045
-ikr.xr1      = 0.00621
-ikr.xr2      = 0.4712
-iks.xs       = 0.0095
-ito.r        = 2.42e-8
-ito.s        = 0.999998
-ical.d       = 3.373e-5
-ical.f       = 0.7888
-ical.f2      = 0.9755
-ical.fCaSS   = 0.9953
-jrel.R_prime = 0.9073
+membrane.V   = -8.53724027509295667e+01
+calcium.Cai  =  1.06222972563886156e-04
+calcium.CaSR =  3.56882183129365060e+00
+calcium.CaSS =  2.20586941435645117e-04
+sodium.Nai   =  1.01354040817375850e+01
+potassium.Ki =  1.35376664068232088e+02
+ina.m        =  1.66431382228051945e-03
+ina.h        =  7.48785482030365435e-01
+ina.j        =  7.48215608080358918e-01
+ikr.xr1      =  2.08748104474520778e-04
+ikr.xr2      =  4.72655656993845763e-01
+iks.xs       =  3.25574452707218980e-03
+ito.r        =  2.36005508976403265e-08
+ito.s        =  9.99997901500768061e-01
+ical.d       =  3.30877411583901370e-05
+ical.f       =  9.70967186938490379e-01
+ical.f2      =  9.99331632222136723e-01
+ical.fCaSS   =  9.99959289174350063e-01
+jrel.R_prime =  9.86742981846740919e-01
 
 #
 # External inputs
@@ -593,7 +593,7 @@ IK_total = ik1.IK1 + ito.Ito + ikr.IKr + iks.IKs + ipk.IpK + stimulus.i_stim - 2
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier
-1.0      10.0     1.0      1000.0   0
+1.0      50.0     0.5      1000.0   0
 
 [[script]]
 import matplotlib.pyplot as plt

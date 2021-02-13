@@ -42,47 +42,48 @@ desc: """
     GNU General Public License for more details (www.gnu.org/licenses)
     """
 # Initial values
-membrane.V      = -87   # V=-87              1
-sodium.Nai      = 7     # nai=7              2
-sodium.Na_ss    = 7     # nass=nai           3
-potassium.Ki    = 145   # ki=145             4
-potassium.K_ss  = 145   # kss=ki             5
-calcium.Cai     = 1e-4  # cai=1.0e-4         6
-calcium.Ca_ss   = 1e-4  # cass=cai           7
-calcium.Ca_nsr  = 1.2   # cansr=1.2          8
-calcium.Ca_jsr  = 1.2   # cajsr=cansr        9
-ina.m           = 0     # m=0               10
-ina.hf          = 1     # hf=1              11
-ina.hs          = 1     # hs=1              12
-ina.j           = 1     # j=1               13
-ina.hsp         = 1     # hsp=1             14
-ina.jp          = 1     # jp=1              15
-inal.m          = 0     # mL=0              16
-inal.h          = 1     # hL=1              17
-inal.hp         = 1     # hLp=1             18
-ito.a           = 0     # a=0               19
-ito.if          = 1     # iF=1              20
-ito.is          = 1     # iS=1
-ito.ap          = 0     # ap=0              22
-ito.ifp         = 1     # iFp=1             23
-ito.isp         = 1     # iSp=1
-ical.d          = 0     # d=0               25
-ical.ff         = 1     # ff=1              26
-ical.fs         = 1     # fs=1
-ical.fcaf       = 1     # fcaf=1            28
-ical.fcas       = 1     # fcas=1
-ical.jca        = 1     # jca=1             30
-ical.nca        = 0     # nca=0
-ical.ffp        = 1     # ffp=1             32
-ical.fcafp      = 1     # fcafp=1           33
-ikr.xf          = 0     # xrf=0
-ikr.xs          = 0     # xrs=0             35
-iks.x1          = 0     # xs1=0             36
-iks.x2          = 0     # xs2=0
-ik1.x           = 1     # xk1=1             38
-ryr.Jrelnp      = 0     # Jrelnp=0
-ryr.Jrelp       = 0     # Jrelp=0           40
-camk.CaMKt      = 0     # CaMKt=0           41
+membrane.V     = -8.79337376452801180e+01
+sodium.Nai     =  7.87619157909246326e+00
+sodium.Na_ss   =  7.87627539602532334e+00
+potassium.Ki   =  1.43978229409269147e+02
+potassium.K_ss =  1.43978196841957015e+02
+calcium.Cai    =  7.73782527884485025e-05
+calcium.Ca_ss  =  7.65016328161378207e-05
+calcium.Ca_nsr =  2.00315748200632049e+00
+calcium.Ca_jsr =  1.93042630940600501e+00
+ina.m          =  7.39463686371098772e-03
+ina.hf         =  6.95741454522123104e-01
+ina.hs         =  6.95728197104262369e-01
+ina.j          =  6.95651647826611597e-01
+ina.hsp        =  4.52188557189629303e-01
+ina.jp         =  6.95597910627556826e-01
+inal.m         =  1.90715020768938265e-04
+inal.h         =  4.99522746606105295e-01
+inal.hp        =  2.72810177142271237e-01
+ito.a          =  1.00570709452367925e-03
+ito.if         =  9.99548880136425399e-01
+ito.is         =  9.99533745716891353e-01
+ito.ap         =  5.12436070542799369e-04
+ito.ifp        =  9.99548880551930030e-01
+ito.isp        =  9.99545575452487567e-01
+ical.d         =  2.37881176709094455e-09
+ical.ff        =  9.99999990705337294e-01
+ical.fs        =  9.18897177694176892e-01
+ical.fcaf      =  9.99999990705387476e-01
+ical.fcas      =  9.99819725932237224e-01
+ical.jca       =  9.99970037851850901e-01
+ical.nca       =  1.84136216190179344e-03
+ical.ffp       =  9.99999990703007158e-01
+ical.fcafp     =  9.99999990703148378e-01
+ikr.xf         =  8.16746880675702540e-06
+ikr.xs         =  4.45866513514587226e-01
+iks.x1         =  2.47200524644588970e-01
+iks.x2         =  1.94312775753246043e-04
+ik1.x          =  9.96777535658642466e-01
+ryr.Jrelnp     =  4.56814610344467302e-07
+ryr.Jrelp      =  5.70887607296486255e-07
+camk.CaMKt     =  1.64243946584969880e-02
+
 
 #
 # External variables
@@ -278,6 +279,7 @@ GNaL = 0.0075 : Maximum conductance of INaL
 f_gnal = if(cell.mode == 1, 0.6, 1)
     desc: Adjustment for different cell types
 INaL = f_gnal * GNaL * (V - nernst.ENa) * m * ((1 - camk.f) * h + camk.f * hp)
+    in [A/F]
 
 #
 # Ito :: Transient outward Potassium current
@@ -337,6 +339,7 @@ Gto = if(cell.mode == 0, 0.02, 0.08)
     desc: Maximum conductance of Ito channels
 Ito = Gto * (V - nernst.EK) * ((1 - camk.f) * a * i + camk.f * ap * ip)
     desc: Transient outward Potassium current
+    in [A/F]
 
 #
 # ICaL  :: L-type Calcium current
@@ -450,7 +453,8 @@ ICaNa  = (1 - camk.f) * PCaNa * PhiCaNa * g + camk.f * PCaNap * PhiCaNa * gp
 ICaK   = (1 - camk.f) * PCaK  * PhiCaK  * g + camk.f * PCaKp  * PhiCaK  * gp
     desc: Potassium current through ICaL channels
     in [uA/uF]
-ICaL_tot = ICaL + ICaNa + ICaK
+ICaL_total = ICaL + ICaNa + ICaK
+    in [A/F]
 
 #
 # IKr :: Rapid delayed rectifier Potassium current
@@ -513,6 +517,7 @@ GKs = if(cell.mode == 1, 1.4 * base, base)
     desc: Conductivity adjustment for cell type
 IKs = GKs * KsCa * x1 * x2 * (V - nernst.EKs)
     desc: Slow delayed rectifier Potassium current
+    in [A/F]
 
 #
 # IK1 :: Inward rectifier Potassium current
@@ -537,6 +542,7 @@ GK1 = base * piecewise(cell.mode == 0, 1, cell.mode == 1, 1.2, 1.3)
         in [mS/uF]
 IK1 = GK1 * sqrt(extra.Ko) * r * x * (V - nernst.EK)
     desc: Inward rectifier Potassium current
+    in [A/F]
 
 #
 # INaCa :: Sodium/Calcium exchange current
@@ -602,7 +608,8 @@ Gncx = piecewise(cell.mode == 0, base, cell.mode == 1, 1.1*base, 1.4*base)
 INaCa = 0.8 * Gncx * allo * (JncxNa + 2 * JncxCa)
     desc: Sodium/Calcium exchange current
     in [uA/uF]
-INaCa_tot = INaCa + inacass.INaCa_ss
+INaCa_total = INaCa + inacass.INaCa_ss
+    in [A/F]
 
 #
 # INaCa_ss :: Sodium/Calcium exchanger current into the L-type subspace
@@ -896,7 +903,7 @@ f = 1 / (1 + KmCaMK / CaMKa)
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier
-1        10       0.5      1000     0
+1        50       0.5      1000     0
 
 [[script]]
 import myokit

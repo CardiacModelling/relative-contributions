@@ -18,55 +18,56 @@ desc: """
 
 """
 # Initial values
-membrane.V    = -8.80019046500000002e1
-camk.CaMKt    =  1.25840446999999998e-2
-sodium.nai    =  7.26800449799999981
-sodium.nass   =  7.26808997699999981
-potassium.ki  =  1.44655591799999996e2
-potassium.kss =  1.44655565099999990e2
-calcium.cai   =  8.6e-5
-calcium.cass  =  8.49e-5
-calcium.cansr =  1.61957453799999995
-calcium.cajsr =  1.57123401400000007
-ina.m         =  7.34412110199999992e-3
-ina.hf        =  6.98107191299999985e-1
-ina.hs        =  6.98089580099999996e-1
-ina.j         =  6.97990843200000044e-1
-ina.hsp       =  4.54948552499999992e-1
-ina.jp        =  6.97924586499999999e-1
-inal.mL       =  1.88261727299999989e-4
-inal.hL       =  5.00854885500000013e-1
-inal.hLp      =  2.69306535700000016e-1
-ito.a         =  1.00109768699999991e-3
-ito.iF        =  9.99554174499999948e-1
-ito.iS        =  5.86506173600000014e-1
-ito.ap        =  5.10086293400000023e-4
-ito.iFp       =  9.99554182300000038e-1
-ito.iSp       =  6.39339948199999952e-1
-ical.d        =  2.34e-9
-ical.ff       =  9.99999990900000024e-1
-ical.fs       =  9.10241277699999962e-1
-ical.fcaf     =  9.99999990900000024e-1
-ical.fcas     =  9.99804677700000033e-1
-ical.jca      =  9.99973831200000052e-1
-ical.ffp      =  9.99999990900000024e-1
-ical.fcafp    =  9.99999990900000024e-1
-ical.nca      =  2.74941404400000020e-3
-ikr.IC1       =  0.999637
-ikr.IC2       =  6.83207999999999982e-5
-ikr.C1        =  1.80144999999999990e-8
-ikr.C2        =  8.26618999999999954e-5
-ikr.O         =  1.55510000000000007e-4
-ikr.IO        =  5.67622999999999969e-5
-ikr.IObound   =  0
-ikr.Obound    =  0
-ikr.Cbound    =  0
-ikr.D         =  0
-iks.xs1       =  2.70775802499999996e-1
-iks.xs2       =  1.92850342599999990e-4
-ik1.x         =  9.96759759399999945e-1
-ryr.Jrelnp    = 2.5e-7
-ryr.Jrelp     = 3.12e-7
+membrane.V    = -8.78332289260156500e+01
+camk.CaMKt    =  1.62569271722697584e-02
+sodium.nai    =  8.05487905474959298e+00
+sodium.nass   =  8.05496535683013803e+00
+potassium.ki  =  1.43802002526781450e+02
+potassium.kss =  1.43801967036999656e+02
+calcium.cai   =  7.70278644785614685e-05
+calcium.cass  =  7.61672584305213990e-05
+calcium.cansr =  1.99013071945887443e+00
+calcium.cajsr =  1.91720189191163914e+00
+ina.m         =  7.46974957570609253e-03
+ina.hf        =  6.92234345927048578e-01
+ina.hs        =  6.92226720711336174e-01
+ina.j         =  6.92182571261871438e-01
+ina.hsp       =  4.48122239999609429e-01
+ina.jp        =  6.92151374753052773e-01
+inal.mL       =  1.94390706474980093e-04
+inal.hL       =  4.98125952833218921e-01
+inal.hLp      =  2.75021520280431753e-01
+ito.a         =  1.01254240169734396e-03
+ito.iF        =  9.99540875630923753e-01
+ito.iS        =  9.99529401114008786e-01
+ito.ap        =  5.15920583307562849e-04
+ito.iFp       =  9.99540875872465762e-01
+ito.iSp       =  9.99538524951797291e-01
+ical.d        =  2.43600006390741068e-09
+ical.ff       =  9.99999990449729981e-01
+ical.fs       =  9.24517343460975138e-01
+ical.fcaf     =  9.99999990449759624e-01
+ical.fcas     =  9.99843092530950384e-01
+ical.jca      =  9.99973615815622718e-01
+ical.ffp      =  9.99999990448357967e-01
+ical.fcafp    =  9.99999990448442233e-01
+ical.nca      =  1.81060358544241008e-03
+ikr.IC1       =  9.99624233847795307e-01
+ikr.IC2       =  7.04423786939510085e-05
+ikr.C1        =  1.85574278329104025e-08
+ikr.C2        =  8.52193074463519719e-05
+ikr.O         =  1.61223413509222765e-04
+ikr.IO        =  5.91346912768967071e-05
+ikr.IObound   = 0.0
+ikr.Obound    = 0.0
+ikr.Cbound    = 0.0
+ikr.D         = 0.0
+iks.xs1       =  2.35778119708545786e-01
+iks.xs2       =  1.96490373574359527e-04
+ik1.x         =  9.96803583127437665e-01
+ryr.Jrelnp    =  4.68446204600778377e-07
+ryr.Jrelp     =  5.85413363941106354e-07
+
 
 #
 # External input variables
@@ -101,7 +102,7 @@ amplitude = -80 [A/F]
 # Cell geometry
 #
 [cell]
-celltype = 0
+celltype = 1
     desc: The type of cell. Endo = 0, Epi = 1, Mid = 2
 cm = 1 [uF/cm^2]
     in [uF/cm^2]
@@ -367,6 +368,8 @@ ICaK = (1 - camk.f) * PCaK * PhiCaK * d * (f * (1 - nca) + jca * fca * nca) + ca
     in [A/F]
 ICaL = (1 - camk.f) * PCa * PhiCaL * d * (f * (1 - nca) + jca * fca * nca) + camk.f * PCap * PhiCaL * d * (fp * (1 - nca) + jca * fcap * nca)
     in [A/F]
+ICaL_total = ICaL + ICaK + ICaNa
+    in [A/F]
 
 #
 # IKr: Rapid delayed rectifier potassium current
@@ -543,6 +546,8 @@ JncxNa_i = 3 * (E4_i * k7_i - E1_i * k8_i) + E3_i * k4pp_i - E2_i * k3pp_i
     in [mM/ms]
 KmCaAct = 0.00015 [mM]
 INaCa_i = 0.8 * Gncx * allo_i * (JncxNa_i + 2 * JncxCa_i)
+    in [A/F]
+INaCa_total = INaCa_i + inacass.INaCa_ss
     in [A/F]
 
 #
@@ -845,7 +850,7 @@ f = 1 / (1 + KmCaMK / CaMKa)
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier
-1        10       0.5      1000     0
+1        50       0.5      1000     0
 
 [[script]]
 import matplotlib.pyplot as pl

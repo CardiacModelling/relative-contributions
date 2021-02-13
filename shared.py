@@ -80,7 +80,7 @@ def demote(var):
     var.demote()
 
 
-def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=10000,
+def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=20000,
                 max_period=10, path=None):
     """
     Pre-paces a model to periodic orbit ("steady state").
