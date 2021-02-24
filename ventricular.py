@@ -44,13 +44,13 @@ current_colours = {
 
 # Human atrial models
 model_names = {
-    'priebe': 'priebe-1998.mmt',
-    'iyer': 'iyer-2004.mmt',
-    'grandi': 'grandi-2010.mmt',
-    'tnnp': 'tentusscher-2004.mmt',
-    'tp': 'tentusscher-2006.mmt',
-    'ohara': 'ohara-2011.mmt',
-    'cipa': 'ohara-cipa-v1-2017.mmt',
+    #'priebe': 'priebe-1998.mmt',
+    #'iyer': 'iyer-2004.mmt',
+    #'grandi': 'grandi-2010.mmt',
+    #'tnnp': 'tentusscher-2004.mmt',
+    #'tp': 'tentusscher-2006.mmt',
+    #'ohara': 'ohara-2011.mmt',
+    #'cipa': 'ohara-cipa-v1-2017.mmt',
     'tomek': 'tomek-2020-chloride-epi.mmt',
 }
 

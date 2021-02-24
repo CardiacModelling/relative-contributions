@@ -2,51 +2,99 @@
 author: Myokit CellML 1 API
 name: ToRORd_dyn_chloride
 # Initial values
-membrane.v               = -9.07210415163755215e+01
-CaMK.CaMKt               =  1.30569498659958202e-02
-intracellular_ions.nai   =  1.34504465863310330e+01
-intracellular_ions.nass  =  1.34507665731145831e+01
-intracellular_ions.ki    =  1.52127351142501425e+02
-intracellular_ions.kss   =  1.52127304158952001e+02
-intracellular_ions.cass  =  5.76228192358473374e-05
-intracellular_ions.cansr =  1.80405337656725373e+00
-intracellular_ions.cajsr =  1.80030401839086562e+00
-intracellular_ions.cai   =  6.63291401513967625e-05
-intracellular_ions.cli   =  3.41278823565471896e+01
-intracellular_ions.clss  =  3.41278604118595936e+01
-INa.m                    =  5.28126196928032764e-04
-INa.h                    =  8.64110886024199054e-01
-INa.j                    =  8.64020736779159693e-01
-INa.hp                   =  7.30661109393661246e-01
-INa.jp                   =  8.63849057627311345e-01
-INaL.mL                  =  1.12320390189618228e-04
-INaL.hL                  =  5.87812918687019459e-01
-INaL.hLp                 =  3.42916532783650474e-01
-Ito.a                    =  8.33422499137620996e-04
-Ito.iF                   =  9.99723047355467465e-01
-Ito.iS                   =  9.99721230433527341e-01
-Ito.ap                   =  4.24616303684157955e-04
-Ito.iFp                  =  9.99723047569382128e-01
-Ito.iSp                  =  9.99722673649916627e-01
-ICaL.d                   = -4.08265247631324327e-48
-ICaL.ff                  =  9.99999995627735228e-01
-ICaL.fs                  =  9.49120255788930778e-01
-ICaL.fcaf                =  9.99999995627751659e-01
-ICaL.fcas                =  9.99899312478802371e-01
-ICaL.jca                 =  9.99977712790671824e-01
-ICaL.ffp                 =  9.99999995626696392e-01
-ICaL.fcafp               =  9.99999995626746463e-01
-ICaL.nca_ss              =  3.07558138025528058e-04
-ICaL.nca_i               =  5.30776892795997886e-04
-IKr.C1                   =  6.08660601606584770e-04
-IKr.C2                   =  7.40560288661531009e-04
-IKr.C3                   =  9.98397090853591185e-01
-IKr.I                    =  7.83176550249302541e-06
-IKr.O                    =  2.45825418670885963e-04
-IKs.xs1                  =  2.27328644702698979e-01
-IKs.xs2                  =  1.42227558148575378e-04
-ryr.Jrel_np              =  3.12438304169715722e-33
-ryr.Jrel_p               = -1.11627570092232615e-31
+#old: """
+membrane.v               = -90.74563
+CaMK.CaMKt               =  1.27354100000000008e-2
+intracellular_ions.nai   = 13.40062
+intracellular_ions.nass  = 13.40094
+intracellular_ions.ki    = 152.3639
+intracellular_ions.kss   = 152.3638
+intracellular_ions.cass  =  5.74992100000000007e-5
+intracellular_ions.cansr = 1.806794
+intracellular_ions.cajsr = 1.805047
+intracellular_ions.cai   =  6.62181600000000064e-5
+intracellular_ions.cli   = 34.31721
+intracellular_ions.clss  = 34.31719
+INa.m                    =  5.25323099999999992e-4
+INa.h                    = 0.8645148
+INa.j                    = 0.8644571
+INa.hp                   = 0.7313656
+INa.jp                   = 0.8643527
+INaL.mL                  =  1.11796899999999993e-4
+INaL.hL                  = 0.5916536
+INaL.hLp                 = 0.3476812
+Ito.a                    =  8.32040799999999984e-4
+Ito.iF                   = 0.9997242
+Ito.iS                   = 0.9997235
+Ito.ap                   =  4.23912100000000010e-4
+Ito.iFp                  = 0.9997242
+Ito.iSp                  = 0.9997241
+ICaL.d                   = -2.48652700000000000e-36
+ICaL.ff                  = 1
+ICaL.fs                  = 0.9510602
+ICaL.fcaf                = 1
+ICaL.fcas                = 0.9999377
+ICaL.jca                 = 0.9999886
+ICaL.ffp                 = 1
+ICaL.fcafp               = 1
+ICaL.nca_ss              =  3.04952299999999984e-4
+ICaL.nca_i               =  5.27266800000000032e-4
+IKr.C1                   = 0.9984733
+IKr.C2                   =  7.39304500000000043e-4
+IKr.C3                   =  6.02907899999999947e-4
+IKr.I                    =  5.67825499999999973e-6
+IKr.O                    =  1.78778300000000009e-4
+IKs.xs1                  = 0.2233584
+IKs.xs2                  =  1.41824699999999998e-4
+ryr.Jrel_np              =  6.77882699999999957e-25
+ryr.Jrel_p               = -1.58194099999999996e-23
+new: """
+membrane.v               = -8.95472316206591188e+01
+CaMK.CaMKt               =  1.15555696601580202e-02
+intracellular_ions.nai   =  1.25630698743360067e+01
+intracellular_ions.nass  =  1.25633717217295846e+01
+intracellular_ions.ki    =  1.45720476942826508e+02
+intracellular_ions.kss   =  1.45720436905272749e+02
+intracellular_ions.cass  =  5.75925492653223662e-05
+intracellular_ions.cansr =  1.74938351915233548e+00
+intracellular_ions.cajsr =  1.74395781037731323e+00
+intracellular_ions.cai   =  6.59092818865862661e-05
+intracellular_ions.cli   =  2.68250384416026719e+01
+intracellular_ions.clss  =  2.68250197720003243e+01
+INa.m                    =  6.80579858978773043e-04
+INa.h                    =  8.43649096579212943e-01
+INa.j                    =  8.43504307701903655e-01
+INa.hp                   =  6.95649756892948834e-01
+INa.jp                   =  8.43151089189767000e-01
+INaL.mL                  =  1.40374741148810260e-04
+INaL.hL                  =  5.48209743712370856e-01
+INaL.hLp                 =  3.05567992197761651e-01
+Ito.a                    =  9.02056824506704594e-04
+Ito.iF                   =  9.99659872561502572e-01
+Ito.iS                   =  9.99652889038093129e-01
+Ito.ap                   =  4.59599952252861621e-04
+Ito.iFp                  =  9.99659872909515412e-01
+Ito.iSp                  =  9.99658539102213806e-01
+ICaL.d                   =  1.56401901328529207e-47
+ICaL.ff                  =  9.99999993993085368e-01
+ICaL.fs                  =  9.43237590947855753e-01
+ICaL.fcaf                =  9.99999993993117786e-01
+ICaL.fcas                =  9.99863837998170690e-01
+ICaL.jca                 =  9.99966927221884738e-01
+ICaL.ffp                 =  9.99999993991259939e-01
+ICaL.fcafp               =  9.99999993991357417e-01
+ICaL.nca_ss              =  3.06969863686208742e-04
+ICaL.nca_i               =  5.17958451253996413e-04
+IKr.C1                   =  6.70371369855516123e-04
+IKr.C2                   =  8.04941886188579214e-04
+IKr.C3                   =  9.98094881001429179e-01
+IKr.I                    =  1.41111106576170731e-05
+IKr.O                    =  4.15663560997729100e-04
+IKs.xs1                  =  2.37243036077620317e-01
+IKs.xs2                  =  1.62210798038340740e-04
+ryr.Jrel_np              =  8.49248994011318504e-32
+ryr.Jrel_p               =  6.03789018939170354e-31
+"""
 
 
 [CaMK]
@@ -134,11 +182,11 @@ PhiCaNa_i = 1 * membrane.vffrt * (gamma_nai * intracellular_ions.nai * exp(1 * m
     in [1]
 PhiCaNa_ss = 1 * membrane.vffrt * (gamma_nass * intracellular_ions.nass * exp(1 * membrane.vfrt) - gamma_nao * extracellular.nao) / (exp(1 * membrane.vfrt) - 1)
     in [1]
-anca_i = 1 / (k2n / km2n + (1 + Kmn / intracellular_ions.cai) ^ 4)
+anca_i = 1 / (k2n / km2n + (1 + Kmn / intracellular_ions.cai)^4)
     in [1]
-anca_ss = 1 / (k2n / km2n + (1 + Kmn / intracellular_ions.cass) ^ 4)
+anca_ss = 1 / (k2n / km2n + (1 + Kmn / intracellular_ions.cass)^4)
     in [1]
-constA = 1820000 * (dielConstant * physical_constants.T) ^ (-1.5)
+constA = 1820000 * (dielConstant * physical_constants.T)^(-1.5)
     in [1]
 dot(d) = (dss - d) / td
     in [1]
@@ -322,7 +370,7 @@ GKs_b = 0.0011 [mS/uF]
 IKs = GKs * KsCa * xs1 * xs2 * (membrane.v - reversal_potentials.EKs)
     in [A/F]
     oxmeta: membrane_slow_delayed_rectifier_potassium_current
-KsCa = 1 + 0.6 / (1 + (3.8e-5 [mM] / intracellular_ions.cai) ^ 1.4)
+KsCa = 1 + 0.6 / (1 + (3.8e-5 [mM] / intracellular_ions.cai)^1.4)
     in [1]
 txs1 = 817.3 [ms] + 1 [ms] / (0.0002326 * exp((membrane.v + 48.28 [mV]) / 17.8 [mV]) + 0.001292 * exp(-(membrane.v + 210 [mV]) / 230 [mV]))
     in [ms]
@@ -341,7 +389,7 @@ xs2ss = xs1ss
 GNa = 11.7802 [mS/uF]
     in [mS/uF]
     oxmeta: membrane_fast_sodium_current_conductance
-INa = GNa * (membrane.v - reversal_potentials.ENa) * m ^ 3 * ((1 - fINap) * h * j + fINap * hp * jp)
+INa = GNa * (membrane.v - reversal_potentials.ENa) * m^3 * ((1 - fINap) * h * j + fINap * hp * jp)
     in [A/F]
     oxmeta: membrane_fast_sodium_current
 ah = piecewise(membrane.v >= -40 [mV], 0, 0.057 * exp(-(membrane.v + 80 [mV]) / 6.8 [mV]))
@@ -358,9 +406,9 @@ dot(h) = (hss - h) / th
     in [1]
 dot(hp) = (hssp - hp) / th
     in [1]
-hss = 1 / (1 + exp((membrane.v + 71.55 [mV]) / 7.43 [mV])) ^ 2
+hss = 1 / (1 + exp((membrane.v + 71.55 [mV]) / 7.43 [mV]))^2
     in [1]
-hssp = 1 / (1 + exp((membrane.v + 77.55 [mV]) / 7.43 [mV])) ^ 2
+hssp = 1 / (1 + exp((membrane.v + 77.55 [mV]) / 7.43 [mV]))^2
     in [1]
 dot(j) = (jss - j) / tj
     in [1]
@@ -370,7 +418,7 @@ jss = hss
     in [1]
 dot(m) = (mss - m) / tm
     in [1]
-mss = 1 / (1 + exp(-(membrane.v + 56.86 [mV]) / 9.03 [mV])) ^ 2
+mss = 1 / (1 + exp(-(membrane.v + 56.86 [mV]) / 9.03 [mV]))^2
     in [1]
 th = 1 [ms] / (ah + bh)
     in [ms]
@@ -378,7 +426,7 @@ tj = 1 [ms] / (aj + bj)
     in [ms]
 tjp = 1.46 * tj
     in [ms]
-tm = 0.1292 [ms] * exp(-((membrane.v + 45.79 [mV]) / 15.54 [mV]) ^ 2) + 0.06487 [ms] * exp(-((membrane.v - 4.823 [mV]) / 51.12 [mV]) ^ 2)
+tm = 0.1292 [ms] * exp(-((membrane.v + 45.79 [mV]) / 15.54 [mV])^2) + 0.06487 [ms] * exp(-((membrane.v - 4.823 [mV]) / 51.12 [mV])^2)
     in [ms]
 
 [INaCa]
@@ -421,9 +469,9 @@ JncxNa_ss = 3 * (E4_ss * k7_ss - E1_ss * k8_ss) + E3_ss * k4pp_ss - E2_ss * k3pp
     in [mM/ms]
 KmCaAct = 0.00015 [mM]
     in [mM]
-allo_i = 1 / (1 + (KmCaAct / intracellular_ions.cai) ^ 2)
+allo_i = 1 / (1 + (KmCaAct / intracellular_ions.cai)^2)
     in [1]
-allo_ss = 1 / (1 + (KmCaAct / intracellular_ions.cass) ^ 2)
+allo_ss = 1 / (1 + (KmCaAct / intracellular_ions.cass)^2)
     in [1]
 h10_i = kasymm + 1 + extracellular.nao / kna1 * (1 + extracellular.nao / kna2)
     in [1]
@@ -613,21 +661,21 @@ Pnak = piecewise(environment.celltype == 1, Pnak_b * 0.9, environment.celltype =
 Pnak_b = 15.4509 [mS/uF]
     in [mS/uF]
     oxmeta: membrane_sodium_potassium_pump_current_permeability
-a1 = k1p * (intracellular_ions.nai / Knai) ^ 3 / ((1 + intracellular_ions.nai / Knai) ^ 3 + (1 + intracellular_ions.ki / Kki) ^ 2 - 1)
+a1 = k1p * (intracellular_ions.nai / Knai)^3 / ((1 + intracellular_ions.nai / Knai)^3 + (1 + intracellular_ions.ki / Kki)^2 - 1)
     in [1]
 a2 = k2p
     in [1]
-a3 = k3p * (extracellular.ko / Kko) ^ 2 / ((1 + extracellular.nao / Knao) ^ 3 + (1 + extracellular.ko / Kko) ^ 2 - 1)
+a3 = k3p * (extracellular.ko / Kko)^2 / ((1 + extracellular.nao / Knao)^3 + (1 + extracellular.ko / Kko)^2 - 1)
     in [1]
 a4 = k4p * MgATP / Kmgatp / (1 + MgATP / Kmgatp)
     in [1]
 b1 = k1m * MgADP
     in [1]
-b2 = k2m * (extracellular.nao / Knao) ^ 3 / ((1 + extracellular.nao / Knao) ^ 3 + (1 + extracellular.ko / Kko) ^ 2 - 1)
+b2 = k2m * (extracellular.nao / Knao)^3 / ((1 + extracellular.nao / Knao)^3 + (1 + extracellular.ko / Kko)^2 - 1)
     in [1]
 b3 = k3m * P * H / (1 + MgATP / Kmgatp)
     in [1]
-b4 = k4m * (intracellular_ions.ki / Kki) ^ 2 / ((1 + intracellular_ions.nai / Knai) ^ 3 + (1 + intracellular_ions.ki / Kki) ^ 2 - 1)
+b4 = k4m * (intracellular_ions.ki / Kki)^2 / ((1 + intracellular_ions.nai / Knai)^3 + (1 + intracellular_ions.ki / Kki)^2 - 1)
     in [1]
 delta = -0.155 [mV]
     in [mV]
@@ -685,7 +733,7 @@ thL = 200 [ms]
     in [ms]
 thLp = 3 * thL
     in [ms]
-tmL = 0.1292 [ms] * exp(-((membrane.v + 45.79 [mV]) / 15.54 [mV]) ^ 2) + 0.06487 [ms] * exp(-((membrane.v - 4.823 [mV]) / 51.12 [mV]) ^ 2)
+tmL = 0.1292 [ms] * exp(-((membrane.v + 45.79 [mV]) / 15.54 [mV])^2) + 0.06487 [ms] * exp(-((membrane.v - 4.823 [mV]) / 51.12 [mV])^2)
     in [ms]
 
 [INab]
@@ -704,9 +752,9 @@ K_atp = 0.25 [mM]
     in [mM]
 K_o_n = 5 [mM]
     in [mM]
-akik = (extracellular.ko / K_o_n) ^ 0.24
+akik = (extracellular.ko / K_o_n)^0.24
     in [1]
-bkik = 1 / (1 + (A_atp / K_atp) ^ 2)
+bkik = 1 / (1 + (A_atp / K_atp)^2)
     in [1]
 fkatp = 0
     in [1]
@@ -864,11 +912,11 @@ BSLmax = 1.124 [mM]
     in [mM]
 BSRmax = 0.047 [mM]
     in [mM]
-Bcai = 1 / (1 + cmdnmax * kmcmdn / (kmcmdn + cai) ^ 2 + trpnmax * kmtrpn / (kmtrpn + cai) ^ 2)
+Bcai = 1 / (1 + cmdnmax * kmcmdn / (kmcmdn + cai)^2 + trpnmax * kmtrpn / (kmtrpn + cai)^2)
     in [1]
-Bcajsr = 1 / (1 + csqnmax * kmcsqn / (kmcsqn + cajsr) ^ 2)
+Bcajsr = 1 / (1 + csqnmax * kmcsqn / (kmcsqn + cajsr)^2)
     in [1]
-Bcass = 1 / (1 + BSRmax * KmBSR / (KmBSR + cass) ^ 2 + BSLmax * KmBSL / (KmBSL + cass) ^ 2)
+Bcass = 1 / (1 + BSRmax * KmBSR / (KmBSR + cass)^2 + BSLmax * KmBSL / (KmBSL + cass)^2)
     in [1]
 KmBSL = 0.0087 [mM]
     in [mM]
@@ -916,7 +964,7 @@ trpnmax = 0.07 [mM]
 Istim = pace * i_Stim_Amplitude
     in [A/F]
     oxmeta: membrane_stimulus_current
-i_Stim_Amplitude = -80 [A/F]
+i_Stim_Amplitude = -53 [A/F]
     in [A/F]
     oxmeta: membrane_stimulus_current_amplitude
 i_Stim_End = 1e17 [ms]
@@ -929,7 +977,7 @@ dot(v) = -(i_ion + Istim)
     label membrane_potential
 i_ion = INa.INa + INaL.INaL + Ito.Ito + ICaL.ICaL + ICaL.ICaNa + ICaL.ICaK + IKr.IKr + IKs.IKs + IK1.IK1 + INaCa.INaCa_i + INaCa.INaCa_ss + INaK.INaK + INab.INab + IKb.IKb + IpCa.IpCa + ICab.ICab + ICl.IClCa + ICl.IClb + I_katp.I_katp
     in [A/F]
-    label cellular_current    
+    label cellular_current
 vffrt = v * physical_constants.F * physical_constants.F / (physical_constants.R * physical_constants.T)
     in [C/mol]
 vfrt = v * physical_constants.F / (physical_constants.R * physical_constants.T)
@@ -974,11 +1022,11 @@ Jrel_b = 1.5378
     oxmeta: SR_release_current_max
 Jrel_inf = piecewise(environment.celltype == 2, Jrel_inf_b * 1.7, Jrel_inf_b)
     in [mM/ms]
-Jrel_inf_b = -a_rel * ICaL.ICaL_ss / 1 [A/F] / (1 + (cajsr_half / intracellular_ions.cajsr) ^ 8)
+Jrel_inf_b = -a_rel * ICaL.ICaL_ss / 1 [A/F] / (1 + (cajsr_half / intracellular_ions.cajsr)^8)
     in [mM/ms]
 Jrel_infp = piecewise(environment.celltype == 2, Jrel_infp_b * 1.7, Jrel_infp_b)
     in [mM/ms]
-Jrel_infp_b = -a_relp * ICaL.ICaL_ss / 1 [A/F] / (1 + (cajsr_half / intracellular_ions.cajsr) ^ 8)
+Jrel_infp_b = -a_relp * ICaL.ICaL_ss / 1 [A/F] / (1 + (cajsr_half / intracellular_ions.cajsr)^8)
     in [mM/ms]
 dot(Jrel_np) = (Jrel_inf - Jrel_np) / tau_rel
     in [mM/ms]
@@ -1011,7 +1059,7 @@ Jtr = (intracellular_ions.cansr - intracellular_ions.cajsr) / 60 [ms]
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier
-1.0      50.0      0.5     1000.0   0
+1.0      50.0     1.0      1000.0   0
 
 [[script]]
 import matplotlib.pyplot as plt
@@ -1021,14 +1069,73 @@ import myokit
 m = get_model()
 p = get_protocol()
 s = myokit.Simulation(m, p)
+s.set_tolerance(1e-8, 1e-8)
+
+#s.set_constant('membrane.i_Stim_Amplitude', -80)
+
+cvars = [
+    'membrane.v',
+    'intracellular_ions.nai',
+    'intracellular_ions.nass',
+    'intracellular_ions.ki',
+    'intracellular_ions.kss',
+    'intracellular_ions.cass',
+    'intracellular_ions.cansr',
+    'intracellular_ions.cajsr',
+    'intracellular_ions.cai',
+    'intracellular_ions.cli',
+    'intracellular_ions.clss',
+]
 
 # Run simulation
-d = s.run(1000)
+n = 500000
+d1 = s.run(n*1000, log_interval=1000, log=['environment.time'] + cvars)
+d2 = s.run(5 * 1000)
+
+d1 = d1.npview()
+d2 = d2.npview()
+d1['environment.time'] *= 1e-3
+d2['environment.time'] *= 1e-3
 
 # Display the results
-var = 'membrane.v'
-plt.figure()
-plt.plot(d.time(), d[var])
-plt.title(var)
+plt.figure(figsize=(12, 9))
+plt.subplots_adjust(0.08, 0.06, 0.99, 0.98, 0.3, 0.2)
+
+plt.subplot(3, 2, 1)
+plt.plot(d2.time(), d2['membrane.v'])
+plt.xlabel('Time (s)')
+plt.ylabel('AP, extra beats')
+
+plt.subplot(3, 2, 2)
+plt.plot(d1.time(), d1['membrane.v'])
+plt.xlabel('Time (s)')
+plt.ylabel('Vr')
+
+plt.subplot(3, 2, 3)
+plt.plot(d1.time(), d1['intracellular_ions.nai'])
+plt.plot(d1.time(), d1['intracellular_ions.nass'])
+plt.xlabel('Time (s)')
+plt.ylabel('[Na]')
+
+plt.subplot(3, 2, 4)
+plt.plot(d1.time(), d1['intracellular_ions.ki'])
+plt.plot(d1.time(), d1['intracellular_ions.kss'])
+plt.xlabel('Time (s)')
+plt.ylabel('[K]')
+
+plt.subplot(3, 2, 5)
+plt.plot(d1.time(), d1['intracellular_ions.cass'])
+plt.plot(d1.time(), d1['intracellular_ions.cansr'])
+plt.plot(d1.time(), d1['intracellular_ions.cajsr'])
+plt.plot(d1.time(), d1['intracellular_ions.cai'])
+plt.xlabel('Time (s)')
+plt.ylabel('[Ca]')
+
+plt.subplot(3, 2, 6)
+plt.plot(d1.time(), d1['intracellular_ions.cli'])
+plt.plot(d1.time(), d1['intracellular_ions.clss'])
+plt.xlabel('Time (s)')
+plt.ylabel('[Cl]')
+
 plt.show()
 
