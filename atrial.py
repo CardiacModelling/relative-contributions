@@ -19,27 +19,9 @@ matplotlib.rcParams['mathtext.default'] = 'regular'
 
 # Current colors
 cmap = matplotlib.cm.get_cmap('tab20')
-current_colours = { # Order = legend order
-    'I_Kr': 0,
-    'I_Ks': 1,
-    'I_to': 2,
-    'I_Kb': 3,
-    'I_f': 8,
-    'I_Kur': 9,
-    'I_K1': 4,
-    'I_NaK': 5,
-    'I_Na': 16,
-    'I_NaL': 17,
-    'I_CaL': 10,
-    'I_NaCa': 11,
-    'I_Na,B': 12,
-    'I_Ca,B': 13,
-    'I_ClCa': 6,
-    'I_Cl,B': 7,
-    'I_Ca,P': 14,
-    'I_K,ACh': 18,
-    # I_K,ATP
-}
+current_colours = dict(shared.current_colours)
+del(current_colours['I_CaT'])
+del(current_colours['I_K,ATP'])
 
 # Human atrial models
 model_names = {
@@ -345,7 +327,7 @@ ax.set_frame_on(False)
 lines = []
 for current, i in current_colours.items():
     lines.append(matplotlib.lines.Line2D([0], [0], color=cmap(i), lw=5))
-labels = [x.replace('_', '') for x in current_colours]
+labels = [shared.current_names[x] for x in current_colours]
 #ax.legend(lines, labels, loc=(0.05, 0.05), ncol=2)
 ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
 

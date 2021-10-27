@@ -6,6 +6,53 @@ import myokit
 import numpy as np
 
 
+current_colours = {
+    'I_Kr': 0,
+    'I_Ks': 1,
+    'I_to': 2,
+    'I_Kb': 3,
+    'I_f': 8,
+    'I_Kur': 9,
+    'I_K1': 4,
+    'I_NaK': 5,
+    'I_Na': 16,
+    'I_NaL': 17,
+    'I_CaL': 10,
+    'I_CaT': 11,
+    'I_NaCa': 12,
+    'I_Na,B': 14,
+    'I_Ca,B': 15,
+    'I_ClCa': 6,
+    'I_Cl,B': 7,
+    'I_Ca,P': 13,
+    'I_K,ACh': 18,
+    'I_K,ATP': 19,
+}
+
+current_names = {
+    'I_Kr': 'IKr',
+    'I_Ks': 'IKs',
+    'I_to': 'Ito (+Isus)',
+    'I_Kb': 'IKb (IbK)',
+    'I_f': 'If',
+    'I_Kur': 'IKur',
+    'I_K1': 'IK1',
+    'I_NaK': 'INaK',
+    'I_Na': 'INa',
+    'I_NaL': 'INaL',
+    'I_CaL': 'ICaL',
+    'I_CaT': 'ICaT',
+    'I_NaCa': 'INaCa (INCX)',
+    'I_Na,B': 'INa,B',
+    'I_Ca,B': 'ICa,B',
+    'I_ClCa': 'IClCa',
+    'I_Cl,B': 'ICl,B',
+    'I_Ca,P': 'ICa,P (IpCa)',
+    'I_K,ACh': 'IK,ACh',
+    'I_K,ATP': 'IK,ATP',
+}
+
+
 def prepare_model(model, protocol, currents, pre_pace=True):
     """
     Prepares a model by setting the desired units, adding a voltage-clamp
