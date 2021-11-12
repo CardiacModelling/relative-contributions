@@ -26,9 +26,9 @@ current_colours = dict(shared.current_colours)
 
 # Human atrial models
 model_names = {
-    #'sampson': 'sampson-2010.mmt',
+    'sampson': 'sampson-2010.mmt',
     'stewart': 'stewart-2009.mmt',
-    #'trovato': 'trovato-2020.mmt',
+    'trovato': 'trovato-2020.mmt',
 }
 
 fancy_names = {
@@ -51,10 +51,10 @@ def current_variables(model, colours=False):
             #'I_Kur': '',
             'I_K1': 'ik1.IK1',
             'I_NaK': 'inak.INaK',
-            'I_Na': 'membrane.INa_total',
-            #'I_NaL': '',
-            'I_CaL': 'membrane.ICaL_total',
-            'I_CaT': 'icat.ICa32',
+            'I_Na': 'nav15.INa',
+            'I_NaL': 'nav11.INa1',
+            'I_CaL': 'ical.ICaL_total',
+            'I_CaT': 'icat.I',
             'I_NaCa': 'inaca.INaCa',
             #'I_Na,B': '',
             #'I_Ca,B': '',
@@ -89,27 +89,28 @@ def current_variables(model, colours=False):
         }
     elif 'trovato' in name:
         currents = {
-            'I_Kr': '',
-            'I_Ks': '',
-            'I_to': '',
-            'I_Kb': '',
-            'I_f': '',
-            'I_Kur': '',
-            'I_K1': '',
-            'I_NaK': '',
-            'I_Na': '',
-            'I_NaL': '',
-            'I_CaL': '',
-            'I_CaT': '',
-            'I_NaCa': '',
-            'I_Na,B': '',
-            'I_Ca,B': '',
-            'I_ClCa': '',
-            'I_Cl,B': '',
-            'I_Ca,P': '',
-            'I_K,ACh': '',
-            'I_K,ATP': '',
+            'I_Kr': 'IKr.IKr',
+            'I_Ks': 'IKs.IKs',
+            'I_to': 'Ito.Ito_total',
+            #'I_Kb': '',
+            'I_f': 'If.If',
+            #'I_Kur': '',
+            'I_K1': 'IK1.IK1',
+            'I_NaK': 'INaK.INaK',
+            'I_Na': 'INa.INa',
+            'I_NaL': 'INaL.INaL',
+            'I_CaL': 'ICaL.ICaL_total',
+            'I_CaT': 'ICaT.ICaT',
+            'I_NaCa': 'INaCa_i.INaCa_total',
+            'I_Na,B': 'INab.INab',
+            'I_Ca,B': 'ICab.ICab',
+            #'I_ClCa': '',
+            #'I_Cl,B': '',
+            'I_Ca,P': 'IpCa.IpCa',
+            #'I_K,ACh': '',
+            #'I_K,ATP': '',
         }
+
     else:
         currents = shared.guess_currents(model)
         print('\n'.join(currents))
@@ -140,8 +141,33 @@ for name, fname in model_names.items():
         v = c.add_variable('i_f_total')
         v.set_unit(c.get('i_f_Na').unit())
         v.set_rhs('i_f_Na + i_f_K')
+
+    elif 'sampson' in name:
+        c = model.get('ito')
+        v = c.add_variable('Ito_total')
+        v.set_unit(c.get('Ito1').unit())
+        v.set_rhs('ito.Ito1 + isus.Isus')
+        c = model.get('ical')
+        v = c.add_variable('ICaL_total')
+        v.set_unit(c.get('ICa').unit())
+        v.set_rhs('ICa + ICaK')
+
+    elif 'trovato' in name:
+        c = model.get('Ito')
+        v = c.add_variable('Ito_total')
+        v.set_unit(c.get('Ito').unit())
+        v.set_rhs('Ito.Ito + Isus.Isus')
+        c = model.get('ICaL')
+        v = c.add_variable('ICaL_total')
+        v.set_unit(c.get('ICaL').unit())
+        v.set_rhs('ICaL + ICaK + ICaNa')
+        c = model.get('INaCa_i')
+        v = c.add_variable('INaCa_total')
+        v.set_unit(c.get('INaCa_i').unit())
+        v.set_rhs('INaCa_i.INaCa_i + INaCa_ss.INaCa_ss')
+
     pre_pace = True
-    if 'stew' in name:
+    if 'stewart' in name:
         pre_pace = False
 
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
@@ -176,7 +202,6 @@ ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
 mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
 
-'''
 # Sampson 2010
 code = 'sampson'
 model = models[code]
@@ -184,7 +209,7 @@ currents, colours = current_variables(model, True)
 s = myokit.Simulation(model, protocol)
 s.set_tolerance(1e-8, 1e-8)
 d = s.run(tmax)
-ax = fig.add_subplot(grid[0, 1])
+ax = fig.add_subplot(grid[1, 0])
 ax.set_title(fancy_names[code])
 ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
@@ -199,14 +224,14 @@ currents, colours = current_variables(model, True)
 s = myokit.Simulation(model, protocol)
 s.set_tolerance(1e-8, 1e-8)
 d = s.run(tmax)
-ax = fig.add_subplot(grid[0, 2])
+ax = fig.add_subplot(grid[2, 0])
 ax.set_title(fancy_names[code])
 ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
 mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
-'''
+
 #
 # Legend
 #
