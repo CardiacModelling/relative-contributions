@@ -247,6 +247,6 @@ labels = [shared.current_names[x] for x in current_colours]
 ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
 
 # Show / store
-plt.savefig('purkinkje.png')
-plt.savefig('purkinkje.pdf')
+plt.savefig('purkinje.png')
+plt.savefig('purkinje.pdf')
 print('Done')
