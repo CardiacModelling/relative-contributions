@@ -12,4 +12,9 @@ Only "human" models are shown.
 
 ## Human atrial
 
+![Human atrial models](./atrial.png)
+
 ## Human Purkinje
+
+![Human Purkinje models](./purkinje.png)
+
