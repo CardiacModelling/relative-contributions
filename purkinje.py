@@ -20,9 +20,11 @@ matplotlib.rcParams['mathtext.default'] = 'regular'
 # Current colors
 cmap = matplotlib.cm.get_cmap('tab20')
 current_colours = dict(shared.current_colours)
-#del(current_colors['I_f'])
-#del(current_colors['I_Kur'])
-#del(current_colors['I_CaT'])
+del(current_colours['I_Kur'])
+del(current_colours['I_ClCa'])
+del(current_colours['I_Cl,B'])
+del(current_colours['I_K,ACh'])
+del(current_colours['I_K,ATP'])
 
 # Human atrial models
 model_names = {
@@ -43,72 +45,51 @@ def current_variables(model, colours=False):
     name = model.name().lower()
     if 'sampson' in name:
         currents = {
+            'I_NaCa': 'inaca.INaCa',
+            'I_to': 'ito.Ito_total',
             'I_Kr': 'ikr.IKr',
             'I_Ks': 'iks.IKs',
-            'I_to': 'ito.Ito_total',
-            #'I_Kb': '',
             'I_f': 'ihcn.IHCN',
-            #'I_Kur': '',
             'I_K1': 'ik1.IK1',
             'I_NaK': 'inak.INaK',
-            'I_Na': 'nav15.INa',
-            'I_NaL': 'nav11.INa1',
             'I_CaL': 'ical.ICaL_total',
             'I_CaT': 'icat.I',
-            'I_NaCa': 'inaca.INaCa',
-            #'I_Na,B': '',
-            #'I_Ca,B': '',
-            #'I_ClCa': '',
-            #'I_Cl,B': '',
             'I_Ca,P': 'ipca.IpCa',
-            #'I_K,ACh': '',
-            #'I_K,ATP': '',
+            'I_NaL': 'nav11.INa1',
+            'I_Na': 'nav15.INa',
         }
     elif 'stewart' in name:
         currents = {
+            'I_to': 'ito.i_to_total',
             'I_Kr': 'ikr.i_Kr',
             'I_Ks': 'iks.i_Ks',
-            'I_to': 'ito.i_to_total',
             'I_Kb': 'ipk.i_p_K',
             'I_f': 'if.i_f_total',
-            #'I_Kur': '',
             'I_K1': 'ik1.i_K1',
             'I_NaK': 'inak.i_NaK',
-            'I_Na': 'ina.i_Na',
-            #'I_NaL': '',
             'I_CaL': 'ical.i_CaL',
-            #'I_CaT': '',
             'I_NaCa': 'inaca.i_NaCa',
             'I_Na,B': 'ibna.i_b_Na',
             'I_Ca,B': 'ibca.i_b_Ca',
-            #'I_ClCa': '',
-            #'I_Cl,B': '',
             'I_Ca,P': 'ipca.i_p_Ca',
-            #'I_K,ACh': '',
-            #'I_K,ATP': '',
+            'I_Na': 'ina.i_Na',
         }
     elif 'trovato' in name:
         currents = {
+            'I_to': 'Ito.Ito_total',
             'I_Kr': 'IKr.IKr',
             'I_Ks': 'IKs.IKs',
-            'I_to': 'Ito.Ito_total',
-            #'I_Kb': '',
             'I_f': 'If.If',
-            #'I_Kur': '',
             'I_K1': 'IK1.IK1',
             'I_NaK': 'INaK.INaK',
-            'I_Na': 'INa.INa',
-            'I_NaL': 'INaL.INaL',
             'I_CaL': 'ICaL.ICaL_total',
             'I_CaT': 'ICaT.ICaT',
+            'I_NaL': 'INaL.INaL',
             'I_NaCa': 'INaCa_i.INaCa_total',
             'I_Na,B': 'INab.INab',
             'I_Ca,B': 'ICab.ICab',
-            #'I_ClCa': '',
-            #'I_Cl,B': '',
             'I_Ca,P': 'IpCa.IpCa',
-            #'I_K,ACh': '',
-            #'I_K,ATP': '',
+            'I_Na': 'INa.INa',
         }
 
     else:

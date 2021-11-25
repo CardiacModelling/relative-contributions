@@ -18,3 +18,7 @@ Only "human" models are shown.
 
 ![Human Purkinje models](./purkinje.png)
 
+## hIPSC models
+
+![hIPSC models](./hipsc.png)
+
