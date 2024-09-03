@@ -18,7 +18,7 @@ matplotlib.rcParams['axes.spines.top'] = False
 matplotlib.rcParams['mathtext.default'] = 'regular'
 
 # Current colors
-cmap = matplotlib.cm.get_cmap('tab20')
+cmap = matplotlib.colormaps['tab20']
 current_colours = dict(shared.current_colours)
 del(current_colours['I_Kb'])
 del(current_colours['I_Kur'])
@@ -115,8 +115,9 @@ models = {}
 for name, fname in model_names.items():
     pre_pace = True
     if 'kernik' in name:
+        # 2024-09-03 Kernik model destabilises when pre-paced
         pre_pace = False
-    model = myokit.load_model(os.path.join('models', 'hipsc', fname))
+    model = myokit.load_model(os.path.join('models', 'c', fname))
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
 
@@ -148,7 +149,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Paci 2018
 code = 'paci-2018'
@@ -162,7 +163,7 @@ ax.set_title(fancy_names[code])
 ax.set_xlabel('Time (s)')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Paci 2020
 code = 'paci-2020'
@@ -176,7 +177,7 @@ ax.set_title(fancy_names[code])
 ax.set_xlabel('Time (s)')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Middle row
@@ -194,7 +195,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Legend

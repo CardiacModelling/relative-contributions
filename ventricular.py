@@ -19,7 +19,7 @@ matplotlib.rcParams['axes.spines.top'] = False
 matplotlib.rcParams['mathtext.default'] = 'regular'
 
 # Current colors
-cmap = matplotlib.cm.get_cmap('tab20')
+cmap = matplotlib.colormaps['tab20']
 current_colours = dict(shared.current_colours)
 del(current_colours['I_f'])
 del(current_colours['I_Kur'])
@@ -34,7 +34,7 @@ model_names = {
     'tp': 'tentusscher-2006.mmt',
     'ohara': 'ohara-2011.mmt',
     'cipa': 'ohara-cipa-v1-2017.mmt',
-    'tomek': 'tomek-2020-chloride-epi.mmt',
+    'tomek': 'tomek-2020.mmt',
 }
 
 fancy_names = {
@@ -46,6 +46,15 @@ fancy_names = {
     'ohara': 'O\'Hara et al., 2011 (epi)',
     'cipa': 'O\'Hara et al., 2017 CiPA (epi)',
     'tomek': 'Tomek et al., 2020 (epi)',
+}
+
+model_modes = {
+    'grandi': {'mode.epi': 1},
+    'tnnp': {'cell.type': 1},
+    'tp': {'cell.type': 1},
+    'ohara': {'cell.mode': 1},
+    'cipa': {'cell.mode': 1},
+    'tomek': {'cell.mode': 1},
 }
 
 
@@ -67,36 +76,36 @@ def current_variables(model, colours=False):
         }
     elif 'iyer' in name:
         currents = {
-            'I_NaCa': 'inaca.inaca',
+            'I_NaCa': 'inaca.INaCa',
             'I_to': 'ito.Ito1',
-            'I_Ks': 'iks.iks',
-            'I_Kr': 'ikr.ikr',
-            'I_Ca,P': 'ipca.ipca',
-            'I_K1': 'ik1.ik1',
-            'I_NaK': 'inak.inak',
-            'I_CaL': 'ical.ICa_total',
-            'I_Ca,B': 'icab.icab',
-            'I_Na,B': 'inab.inab',
-            'I_Na': 'ina.ina',
+            'I_Ks': 'iks.IKs',
+            'I_Kr': 'ikr.IKr',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL',
+            'I_Ca,B': 'icab.ICaB',
+            'I_Na,B': 'inab.INaB',
+            'I_Na': 'ina.INa',
         }
     elif 'grandi' in name:
         currents = {
-            'I_Cl,B': 'iclb.IClb',
-            'I_ClCa': 'iclca.iclca',
-            'I_to': 'ito.ito',
-            'I_Kb': 'ikp.I_kp',
-            'I_Ks': 'iks.I_ks',
-            'I_Kr': 'ikr.I_kr',
-            'I_Ca,P': 'ipca.I_pca',
-            'I_K1': 'ik1.I_k1',
-            'I_NaK': 'inak.I_nak',
-            'I_CaL': 'ical.I_CaL',
-            'I_NaCa': 'incx.I_ncx',
-            'I_Ca,B': 'icabk.I_cabk',
-            'I_Na,B': 'inab.I_nabk',
-            'I_Na': 'ina.I_Na',
+            'I_Cl,B': 'iclb.IClB',
+            'I_ClCa': 'iclca.IClCa',
+            'I_to': 'ito.Ito',
+            'I_Kb': 'ikp.IKp',
+            'I_Ks': 'iks.IKs',
+            'I_Kr': 'ikr.IKr',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL',
+            'I_NaCa': 'inaca.INaCa',
+            'I_Ca,B': 'icab.ICaB',
+            'I_Na,B': 'inab.INaB',
+            'I_Na': 'ina.INa',
         }
-    elif 'tusscher_2004' in name:
+    elif 'tusscher-2004' in name:
         currents = {
             'I_NaCa': 'inaca.INaCa',
             'I_to': 'ito.Ito',
@@ -135,14 +144,14 @@ def current_variables(model, colours=False):
             'I_Ca,P': 'ipca.IpCa',
             'I_K1': 'ik1.IK1',
             'I_NaK': 'inak.INaK',
-            'I_CaL': 'ical.ICaL_total',
+            'I_CaL': 'ical.ICaL_tot',
             'I_NaL': 'inal.INaL',
-            'I_NaCa': 'inaca.INaCa_total',
+            'I_NaCa': 'inacass.INaCa_tot',
             'I_Ca,B': 'icab.ICab',
             'I_Na,B': 'inab.INab',
             'I_Na': 'ina.INa',
         }
-    elif 'cipa' in name:
+    elif 'dutta-2017' in name:
         currents = {
             'I_to': 'ito.Ito',
             'I_Kb': 'ikb.IKb',
@@ -151,31 +160,31 @@ def current_variables(model, colours=False):
             'I_Ca,P': 'ipca.IpCa',
             'I_K1': 'ik1.IK1',
             'I_NaK': 'inak.INaK',
-            'I_CaL': 'ical.ICaL_total',
+            'I_CaL': 'ical.ICaL_tot',
             'I_NaL': 'inal.INaL',
-            'I_NaCa': 'inaca.INaCa_total',
+            'I_NaCa': 'inacass.INaCa_tot',
             'I_Ca,B': 'icab.ICab',
             'I_Na,B': 'inab.INab',
             'I_Na': 'ina.INa',
         }
-    elif 'torord' in name:
+    elif 'tomek-2020' in name:
         currents = {
-            'I_Cl,B': 'ICl.IClb',
-            'I_ClCa': 'ICl.IClCa',
-            'I_to': 'Ito.Ito',
-            'I_Kb': 'IKb.IKb',
-            'I_Ks': 'IKs.IKs',
-            'I_Kr': 'IKr.IKr',
-            'I_K,ATP': 'I_katp.I_katp',
-            'I_Ca,P': 'IpCa.IpCa',
-            'I_K1': 'IK1.IK1',
-            'I_NaK': 'INaK.INaK',
-            'I_CaL': 'ICaL.ICaL',
-            'I_NaL': 'INaL.INaL',
-            'I_NaCa': 'INaCa.INaCa',
-            'I_Ca,B': 'ICab.ICab',
-            'I_Na,B': 'INab.INab',
-            'I_Na': 'INa.INa',
+            'I_Cl,B': 'iclb.IClb',
+            'I_ClCa': 'iclca.IClCa',
+            'I_to': 'ito.Ito',
+            'I_Kb': 'ikb.IKb',
+            'I_Ks': 'iks.IKs',
+            'I_Kr': 'ikr.IKr',
+            'I_K,ATP': 'ikatp.IKatp',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL_total',
+            'I_NaL': 'inal.INaL',
+            'I_NaCa': 'inaca.INaCa',
+            'I_Ca,B': 'icab.ICab',
+            'I_Na,B': 'inab.INab',
+            'I_Na': 'ina.INa',
         }
 
     else:
@@ -198,10 +207,15 @@ protocol = myokit.pacing.blocktrain(cl, duration=0.5, offset=50)
 # Load and prepare models
 models = {}
 for name, fname in model_names.items():
-    pre_pace = False
-    if 'priebe' in name or 'iyer' in name:
+    print(f'Preparing {fancy_names[name]}...')
+    pre_pace = True
+    if 'priebe' in name:
+        # 2024-09-03 Priebe runs into numerical issues when prepacing
         pre_pace = False
-    model = myokit.load_model(os.path.join('models', 'ventricular', fname))
+    model = myokit.load_model(os.path.join('models', 'c', fname))
+    for k, v in model_modes.get(name, {}).items():
+        print(f'  Setting {k} to {v}')
+        model.get(k).set_rhs(v)
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
 
@@ -233,7 +247,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Iyer et al. 2004
 code = 'iyer'
@@ -248,7 +262,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Grandi 2010
 code = 'grandi'
@@ -263,7 +277,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Middle row: Ten Tusscher & Panfilov models
@@ -281,7 +295,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 
 # TP 2006
@@ -297,7 +311,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Bottom row: O'Hara models
@@ -315,7 +329,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # O'Hara et al. 2017 CiPA update
 code = 'cipa'
@@ -330,7 +344,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Tomek et al. 2020
 code = 'tomek'
@@ -345,7 +359,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 
 #

@@ -18,7 +18,7 @@ matplotlib.rcParams['axes.spines.top'] = False
 matplotlib.rcParams['mathtext.default'] = 'regular'
 
 # Current colors
-cmap = matplotlib.cm.get_cmap('tab20')
+cmap = matplotlib.colormaps['tab20']
 current_colours = dict(shared.current_colours)
 del(current_colours['I_CaT'])
 del(current_colours['I_K,ATP'])
@@ -28,17 +28,17 @@ model_names = {
     'courtemanche': 'courtemanche-1998.mmt',
     'grandi': 'grandi-2011.mmt',
     'koivumaki': 'koivumaki-2011.mmt',
-    'maleckar': 'maleckar-2008.mmt',
+    'maleckar': 'maleckar-2009.mmt',
     'ni': 'ni-2017.mmt',
     'nygren': 'nygren-1998.mmt',
-    'voigt': 'voigt-heijman-2013.mmt',
+    'voigt': 'voigt-2013.mmt',
 }
 
 fancy_names = {
     'courtemanche': 'Courtemanche et al., 1998',
     'grandi': 'Grandi-Pandit-Voigt et al., 2011',
     'koivumaki': 'Koivumaki et al., 2011',
-    'maleckar': 'Maleckar et al., 2008',
+    'maleckar': 'Maleckar et al., 2009',
     'ni': 'Ni et al., 2017',
     'nygren': 'Nygren et al., 1998',
     'voigt': 'Voigt-Heijman et al., 2013',
@@ -50,34 +50,34 @@ def current_variables(model, colours=False):
     name = model.name().lower()
     if 'nygren' in name:
         currents = {
-            'I_Kur': 'isus.i_sus',
-            'I_to': 'it.i_t',
-            'I_CaL': 'ical.iCaL',
-            'I_NaCa': 'inaca.i_NaCa',
-            'I_Kr': 'ikr.i_Kr',
-            'I_Ks': 'iks.i_Ks',
-            'I_K1': 'ik1.i_K1',
-            'I_NaK': 'inak.i_NaK',
-            'I_Ca,P': 'icap.i_CaP',
-            'I_Ca,B': 'ib.i_B_Ca',
-            'I_Na,B': 'ib.i_B_Na',
-            'I_Na': 'ina.i_Na',
+            'I_Kur': 'isus.Isus',
+            'I_to': 'it.It',
+            'I_CaL': 'ical.ICaL',
+            'I_NaCa': 'inaca.INaCa',
+            'I_Kr': 'ikr.IKr',
+            'I_Ks': 'iks.IKs',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_Ca,P': 'icap.ICaP',
+            'I_Ca,B': 'ibca.IBCa',
+            'I_Na,B': 'ibna.IBNa',
+            'I_Na': 'ina.INa',
         }
     elif 'maleckar-' in name:
         currents = {
-            'I_Kur': 'ikur.i_Kur',
-            'I_to': 'it.i_t',
-            'I_CaL': 'ical.i_Ca_L',
-            'I_NaCa': 'inaca.i_NaCa',
-            'I_Kr': 'ikr.i_Kr',
-            'I_Ks': 'iks.i_Ks',
-            'I_K1': 'ik1.i_K1',
-            'I_NaK': 'inak.i_NaK',
-            'I_Ca,P': 'icap.i_CaP',
-            'I_Ca,B': 'ib.i_B_Ca',
-            'I_Na,B': 'ib.i_B_Na',
-            'I_K,ACh': 'ikach.i_KACh',
-            'I_Na': 'ina.i_Na',
+            'I_Kur': 'ikur.IKur',
+            'I_to': 'it.It',
+            'I_CaL': 'ical.ICaL',
+            'I_NaCa': 'inaca.INaCa',
+            'I_Kr': 'ikr.IKr',
+            'I_Ks': 'iks.IKs',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_Ca,P': 'icap.ICaP',
+            'I_Ca,B': 'ibca.IBCa',
+            'I_Na,B': 'ibna.IBNa',
+            'I_K,ACh': 'ikach.IKACh',
+            'I_Na': 'ina.INa',
         }
     elif 'koivumaki' in name:
         currents = {
@@ -97,18 +97,18 @@ def current_variables(model, colours=False):
         }
     elif 'courtemanche-1998' in name:
         currents = {
-            'I_NaCa': 'inaca.i_NaCa',
-            'I_Kur': 'ikur.i_Kur',
-            'I_to': 'ito.i_to',
-            'I_CaL': 'ical.i_Ca_L',
-            'I_Kr': 'ikr.i_Kr',
-            'I_Ks': 'iks.i_Ks',
-            'I_K1': 'ik1.i_K1',
-            'I_NaK': 'inak.i_NaK',
-            'I_Ca,P': 'ipca.i_PCa',
-            'I_Ca,B': 'ib.i_B_Ca',
-            'I_Na,B': 'ib.i_B_Na',
-            'I_Na': 'ina.i_Na',
+            'I_NaCa': 'inaca.INaCa',
+            'I_Kur': 'ikur.IKur',
+            'I_to': 'ito.Ito',
+            'I_CaL': 'ical.ICaL',
+            'I_Kr': 'ikr.IKr',
+            'I_Ks': 'iks.IKs',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_Ca,B': 'ib.IbCa',
+            'I_Na,B': 'ib.IbNa',
+            'I_Na': 'ina.INa',
         }
     elif 'ni-' in name:
         currents = {
@@ -184,10 +184,13 @@ protocol = myokit.pacing.blocktrain(cl, duration=0.5, offset=50)
 # Load and prepare models
 models = {}
 for name, fname in model_names.items():
+    print(f'Preparing {fancy_names[name]}...')
     pre_pace = True
     if 'koiv' in name:
+        # 2024-09-03 Koivumaki doesn't stabilise, with difference increasing
+        # even after 60000 beats.
         pre_pace = False
-    model = myokit.load_model(os.path.join('models', 'atrial', fname))
+    model = myokit.load_model(os.path.join('models', 'c', fname))
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
 
@@ -219,7 +222,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Maleckar 2009
 code = 'maleckar'
@@ -234,7 +237,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Koivumaki 2011
 code = 'koivumaki'
@@ -249,7 +252,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Middle row: Courtemanche models
@@ -267,7 +270,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Ni 2017
 code = 'ni'
@@ -282,7 +285,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Bottom row: Grandi models
@@ -300,7 +303,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Voigt-Heijman 2013
 code = 'voigt'
@@ -315,7 +318,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Legend

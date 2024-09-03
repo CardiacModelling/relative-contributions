@@ -2,6 +2,8 @@
 #
 # Shared code for model current "relative contribution" graphs.
 #
+import os
+
 import myokit
 import numpy as np
 
@@ -87,21 +89,28 @@ def prepare_model(model, protocol, currents, pre_pace=True):
         helpers.append(C.rhs())
 
     # Convert variable units
-    i_unit = 'A/F'
-    v.convert_unit('mV')
+    i_unit = myokit.parse_unit('A/F')
+    if v.unit() != myokit.units.mV:
+        print(f'Converting {v} to mV')
+        v.convert_unit('mV')
     for qname in currents:
         var = model.get(qname)
         if var.unit() is None:
             raise ValueError(
                 'No unit set for ' + str(var) + ' in ' + str(model))
-        var.convert_unit(i_unit, helpers=helpers)
-    t.convert_unit('ms')
+        if var.unit() != i_unit:
+            print(f'  Converting {var} to {i_unit}')
+            var.convert_unit(i_unit, helpers=helpers)
+    if t.unit() != myokit.units.ms:
+        print(f'Converting {t} to ms')
+        t.convert_unit('ms')
 
     # Pre-pace
-    if pre_pace and not 'koiv' in model.name():
+    if pre_pace:
         print('Pre-pacing: ' + model.name())
-        model.set_state(limit_cycle(model, protocol))
-        print(model.format_state(model.state()))
+        path = os.path.join('states', model.name() + '.txt')
+        model.set_initial_values(limit_cycle(model, protocol, path=path))
+        print(model.format_state(model.initial_values()))
     else:
         print('NOT Pre-pacing: ' + model.name())
 
@@ -152,11 +161,9 @@ def limit_cycle(model, protocol, cl=None, rel_tol=1e-5, max_beats=20000,
     try:
         loaded = myokit.load_state(path)
         s.set_state(loaded)
+        print('Loaded state from ' + str(path))
     except Exception:
         loaded = None
-        pass
-    else:
-        print('Loaded state from ' + str(path))
 
     # Get scale of each state
     states = list(model.states())

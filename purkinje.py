@@ -18,7 +18,7 @@ matplotlib.rcParams['axes.spines.top'] = False
 matplotlib.rcParams['mathtext.default'] = 'regular'
 
 # Current colors
-cmap = matplotlib.cm.get_cmap('tab20')
+cmap = matplotlib.colormaps['tab20']
 current_colours = dict(shared.current_colours)
 del(current_colours['I_Kur'])
 del(current_colours['I_ClCa'])
@@ -76,20 +76,20 @@ def current_variables(model, colours=False):
         }
     elif 'trovato' in name:
         currents = {
-            'I_to': 'Ito.Ito_total',
-            'I_Kr': 'IKr.IKr',
-            'I_Ks': 'IKs.IKs',
-            'I_f': 'If.If',
-            'I_K1': 'IK1.IK1',
-            'I_NaK': 'INaK.INaK',
-            'I_CaL': 'ICaL.ICaL_total',
-            'I_CaT': 'ICaT.ICaT',
-            'I_NaL': 'INaL.INaL',
-            'I_NaCa': 'INaCa_i.INaCa_total',
-            'I_Na,B': 'INab.INab',
-            'I_Ca,B': 'ICab.ICab',
-            'I_Ca,P': 'IpCa.IpCa',
-            'I_Na': 'INa.INa',
+            'I_to': 'ito.Ito_total',
+            'I_Kr': 'ikr.IKr',
+            'I_Ks': 'iks.IKs',
+            'I_f': 'if.If',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL_tot',
+            'I_CaT': 'icat.ICaT',
+            'I_NaL': 'inal.INaL',
+            'I_NaCa': 'inacass.INaCa_tot',
+            'I_Na,B': 'inab.INab',
+            'I_Ca,B': 'icab.ICab',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_Na': 'ina.INa',
         }
 
     else:
@@ -112,7 +112,8 @@ protocol = myokit.pacing.blocktrain(cl, duration=0.5, offset=50)
 # Load and prepare models
 models = {}
 for name, fname in model_names.items():
-    model = myokit.load_model(os.path.join('models', 'purkinje', fname))
+    print(f'Preparing {fancy_names[name]}...')
+    model = myokit.load_model(os.path.join('models', 'c', fname))
     if 'stewart' in name:
         c = model.get('ito')
         v = c.add_variable('i_to_total')
@@ -134,21 +135,14 @@ for name, fname in model_names.items():
         v.set_rhs('ICa + ICaK')
 
     elif 'trovato' in name:
-        c = model.get('Ito')
+        c = model.get('ito')
         v = c.add_variable('Ito_total')
         v.set_unit(c.get('Ito').unit())
-        v.set_rhs('Ito.Ito + Isus.Isus')
-        c = model.get('ICaL')
-        v = c.add_variable('ICaL_total')
-        v.set_unit(c.get('ICaL').unit())
-        v.set_rhs('ICaL + ICaK + ICaNa')
-        c = model.get('INaCa_i')
-        v = c.add_variable('INaCa_total')
-        v.set_unit(c.get('INaCa_i').unit())
-        v.set_rhs('INaCa_i.INaCa_i + INaCa_ss.INaCa_ss')
+        v.set_rhs('ito.Ito + isus.Isus')
 
     pre_pace = True
     if 'stewart' in name:
+        # 2024-09-03 Stewart model destabilises when pre-paced
         pre_pace = False
 
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
@@ -181,7 +175,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Sampson 2010
 code = 'sampson'
@@ -196,7 +190,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 # Trovato 2020
 code = 'trovato'
@@ -211,7 +205,7 @@ ax.set_xlabel('Time (s)')
 ax.set_yticklabels([])
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalise=True)
+mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
 
 #
 # Legend
