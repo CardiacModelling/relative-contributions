@@ -12,8 +12,8 @@
     - Moreno 2011
     - Balakina-Vikulova 2020
   - Grandi 2009
-- **Grandi 2010** (Shannon 2004, Puglisis 2001)
-  - Carro 2011 (has official cellml)
+- **Grandi 2010** (Shannon 2004, Puglisi 2001)
+  - **Carro 2011**
   - Asakura 2014
     - Himeno 2015  (contains iterative routine to find equilibrium)
 - **O'Hara 2011** (livshitz 2009, Hund 2004)
@@ -58,7 +58,7 @@
 ## SAN
 - Pohl 2016 (Dokos 1996, Wilders 1991) (no code, missing info)
 - **Fabbri 2017** (Severi 2012, Maltsev 2009)
-  - Loewe 2019
+  - **Loewe 2019**
   - Hoekstra 2021
 
 ## hIPSC

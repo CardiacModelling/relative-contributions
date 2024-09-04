@@ -27,28 +27,23 @@ del(current_colours['I_CaT'])
 
 # Human atrial models
 model_names = {
-    'priebe': 'priebe-1998.mmt',
-    'iyer': 'iyer-2004.mmt',
-    'grandi': 'grandi-2010.mmt',
-    'tnnp': 'tentusscher-2004.mmt',
-    'tp': 'tentusscher-2006.mmt',
-    'ohara': 'ohara-2011.mmt',
+    'bartolucci': 'bartolucci-2020.mmt',
+    'carro': 'carro-2011.mmt',
     'cipa': 'ohara-cipa-v1-2017.mmt',
+    'fink': 'fink-2008.mmt',
+    'grandi': 'grandi-2010.mmt',
+    'iyer': 'iyer-2004.mmt',
+    'ohara': 'ohara-2011.mmt',
+    'priebe': 'priebe-1998.mmt',
+    'tnnp': 'tentusscher-2004.mmt',
     'tomek': 'tomek-2020.mmt',
+    'tp': 'tentusscher-2006.mmt',
 }
 
-fancy_names = {
-    'priebe': 'Priebe & Beuckelmann, 1998',
-    'iyer': 'Iyer et al., 2004 (epi)',
-    'grandi': 'Grandi et al., 2010 (epi)',
-    'tnnp': 'Ten Tusscher et al., 2004 (epi)',
-    'tp': 'Ten Tusscher & Panfilov 2006 (epi)',
-    'ohara': 'O\'Hara et al., 2011 (epi)',
-    'cipa': 'O\'Hara et al., 2017 CiPA (epi)',
-    'tomek': 'Tomek et al., 2020 (epi)',
-}
 
 model_modes = {
+    'bartolucci': {'cell.mode': 1},
+    'carro': {'mode.epi': 1},
     'grandi': {'mode.epi': 1},
     'tnnp': {'cell.type': 1},
     'tp': {'cell.type': 1},
@@ -186,7 +181,54 @@ def current_variables(model, colours=False):
             'I_Na,B': 'inab.INab',
             'I_Na': 'ina.INa',
         }
-
+    elif 'fink-2008' in name:
+        currents = {
+            'I_to': 'ito.i_to',
+            'I_Kb': 'ipk.i_p_K',
+            'I_Ks': 'iks.i_Ks',
+            'I_Kr': 'ikr.i_Kr',
+            'I_K1': 'ik1.i_K1',
+            'I_NaCa': 'inaca.i_NaCa',
+            'I_NaK': 'inak.i_NaK',
+            'I_Ca,P': 'ipca.i_p_Ca',
+            'I_CaL': 'ical.i_CaL',
+            'I_Ca,B': 'icab.i_b_Ca',
+            'I_Na,B': 'inab.i_b_Na',
+            'I_Na': 'ina.i_Na',
+        }
+    elif 'carro' in name:
+        currents = {
+            'I_Cl,B': 'iclb.IClB',
+            'I_ClCa': 'iclca.IClCa',
+            'I_to': 'ito.Ito',
+            'I_Kb': 'ikp.IKp',
+            'I_Ks': 'iks.IKs',
+            'I_Kr': 'ikr.IKr',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL',
+            'I_NaCa': 'inaca.INaCa',
+            'I_Ca,B': 'icab.ICaB',
+            'I_Na,B': 'inab.INaB',
+            'I_Na': 'ina.INa',
+        }
+    elif 'bartolucci-2020' in name:
+        currents = {
+            'I_to': 'ito.Ito',
+            'I_Kb': 'ikb.IKb',
+            'I_Ks': 'iks.IKs',
+            'I_Kr': 'ikr.IKr',
+            'I_Ca,P': 'ipca.IpCa',
+            'I_K1': 'ik1.IK1',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL',
+            'I_NaL': 'inal.INaL',
+            'I_NaCa': 'inacass.INaCa_total',
+            'I_Ca,B': 'icab.ICab',
+            'I_Na,B': 'inab.INab',
+            'I_Na': 'ina.INa',
+        }
     else:
         currents = shared.guess_currents(model)
         print('\n'.join(currents))
@@ -207,7 +249,7 @@ protocol = myokit.pacing.blocktrain(cl, duration=0.5, offset=50)
 # Load and prepare models
 models = {}
 for name, fname in model_names.items():
-    print(f'Preparing {fancy_names[name]}...')
+    print(f'Preparing {name}...')
     pre_pace = True
     if 'priebe' in name:
         # 2024-09-03 Priebe runs into numerical issues when prepacing
@@ -218,154 +260,178 @@ for name, fname in model_names.items():
         model.get(k).set_rhs(v)
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
+print('Finished preparation.\nPreparing plots')
+
 
 # Maximum time to show in plots
 tmax = 800
+
 
 def text(ax, x, y, t, c='w'):
     ax.text(x, y, t, color=c, transform=ax.transAxes, fontweight='bold',
             horizontalalignment='right', verticalalignment='center')
 
+
+def plot(code, grid, i, j, d, ylabel='Relative contribution'):
+    gr = grid[i, j].subgridspec(4, 1, hspace=0)
+
+    # V and CaT
+    ax = fig.add_subplot(gr[0, 0])
+    ax.set_title(model.meta['display_name'])
+    ax.set_xticklabels([])
+    ax.plot(d.time(), d['membrane.V'], 'k')
+    ax.set_xlim(0, tmax)
+    ax.set_ylim(-95, 45)
+    ax.set_yticks([-80, -40, 0, 40])
+    #ax.set_yticklabels([None, -40, 0, 40])
+
+    #ax = ax.secondary_yaxis()
+
+    # Contributions
+    ax = fig.add_subplot(gr[1:, 0])
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel(ylabel)
+    ax.set_xlim(0, tmax)
+    ax.set_ylim(-1.02, 1.02)
+    ax.set_yticks([-1, -0.5, 0, 0.5, 1])
+    ax.set_yticklabels(['-1', '-0.5', '0', '0.5', '1'])
+    ax.yaxis.get_majorticklabels()[-1].set_verticalalignment('top')
+    ax.yaxis.get_majorticklabels()[0].set_verticalalignment('bottom')
+
+    mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+
+
 # Create figure
-fig = plt.figure(figsize=(9, 9))
-fig.subplots_adjust(0.075, 0.05, 0.98, 0.97, hspace=0.35, wspace=0.2)
-grid = GridSpec(3, 3)
+fig = plt.figure(figsize=(9, 12.5))
+fig.subplots_adjust(0.067, 0.035, 0.98, 0.98, hspace=0.35, wspace=0.25)
+grid = GridSpec(4, 3)
 
 #
 # Top row: Various models
 #
 # Priebe & Beuckelmann 1998
 code = 'priebe'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[0, 0])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Relative contribution')
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 0, 0, d)
+
 
 # Iyer et al. 2004
 code = 'iyer'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[0, 1])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
-
-# Grandi 2010
-code = 'grandi'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[0, 2])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 0, 1, d, ylabel=None)
 
 #
-# Middle row: Ten Tusscher & Panfilov models
+# Second row: Ten Tusscher & Panfilov models
 #
 # TNNP 2004
 code = 'tnnp'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[1, 0])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Relative contribution')
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
-
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 1, 0, d)
 
 # TP 2006
 code = 'tp'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[1, 1])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 1, 1, d, ylabel=None)
+
+# Fink 2008
+code = 'fink'
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 1, 2, d, ylabel=None)
 
 #
-# Bottom row: O'Hara models
+# Third row: Grandi models
+#
+# Grandi 2010
+code = 'grandi'
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 2, 0, d)
+
+code = 'carro'
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 2, 1, d)
+
+#
+# Fourth row: O'Hara models
 #
 # O'Hara et al. 2011
 code = 'ohara'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[2, 0])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Relative contribution')
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 3, 0, d)
 
 # O'Hara et al. 2017 CiPA update
 code = 'cipa'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[2, 1])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models and False:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 3, 1, d, ylabel=None)
 
 # Tomek et al. 2020
 code = 'tomek'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[2, 2])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 3, 1, d, ylabel=None)
 
+# Bartolucci et al. 2022
+code = 'bartolucci'
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 3, 2, d, ylabel=None)
 
 #
 # Legend
 #
-ax = fig.add_subplot(grid[1, 2])
+ax = fig.add_subplot(grid[0, 2])
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
 ax.set_frame_on(False)

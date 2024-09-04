@@ -33,12 +33,6 @@ model_names = {
     'trovato': 'trovato-2020.mmt',
 }
 
-fancy_names = {
-    'sampson': 'Sampson-Iyer et al., 2010',
-    'stewart': 'Stewart et al., 2009',
-    'trovato': 'Trovato et al., 2020',
-}
-
 
 def current_variables(model, colours=False):
     """ Returns an ordered list of transmembrane current variable names. """
@@ -112,7 +106,7 @@ protocol = myokit.pacing.blocktrain(cl, duration=0.5, offset=50)
 # Load and prepare models
 models = {}
 for name, fname in model_names.items():
-    print(f'Preparing {fancy_names[name]}...')
+    print(f'Preparing {name}...')
     model = myokit.load_model(os.path.join('models', 'c', fname))
     if 'stewart' in name:
         c = model.get('ito')
@@ -147,65 +141,88 @@ for name, fname in model_names.items():
 
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
-
+print('Finished preparation.\nPreparing plots')
 
 
 # Maximum time to show in plots
 tmax = 800
 
+
 def text(ax, x, y, t, c='w'):
     ax.text(x, y, t, color=c, transform=ax.transAxes, fontweight='bold',
             horizontalalignment='right', verticalalignment='center')
 
-# Create figure
-fig = plt.figure(figsize=(9, 9))
-fig.subplots_adjust(0.075, 0.05, 0.98, 0.97, hspace=0.35, wspace=0.2)
-grid = GridSpec(3, 3)
 
+def plot(code, grid, i, j, d, ylabel='Relative contribution'):
+    gr = grid[i, j].subgridspec(4, 1, hspace=0)
+
+    # V and CaT
+    ax = fig.add_subplot(gr[0, 0])
+    ax.set_title(model.meta['display_name'])
+    ax.set_xticklabels([])
+    ax.plot(d.time(), d['membrane.V'], 'k')
+    ax.set_xlim(0, tmax)
+    ax.set_ylim(-95, 45)
+    ax.set_yticks([-80, -40, 0, 40])
+    #ax.set_yticklabels([None, -40, 0, 40])
+
+    #ax = ax.secondary_yaxis()
+
+    # Contributions
+    ax = fig.add_subplot(gr[1:, 0])
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel(ylabel)
+    ax.set_xlim(0, tmax)
+    ax.set_ylim(-1.02, 1.02)
+    ax.set_yticks([-1, -0.5, 0, 0.5, 1])
+    ax.set_yticklabels(['-1', '-0.5', '0', '0.5', '1'])
+    ax.yaxis.get_majorticklabels()[-1].set_verticalalignment('top')
+    ax.yaxis.get_majorticklabels()[0].set_verticalalignment('bottom')
+
+    mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+
+
+# Create figure
+fig = plt.figure(figsize=(9, 12.5))
+fig.subplots_adjust(0.067, 0.035, 0.98, 0.98, hspace=0.35, wspace=0.25)
+grid = GridSpec(4, 3)
+
+#
+# Top row: Purkinje
+#
 # Stewart 2009
 code = 'stewart'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[0, 0])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Relative contribution')
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 0, 0, d)
 
 # Sampson 2010
 code = 'sampson'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[1, 0])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 0, 1, d, ylabel=None)
 
 # Trovato 2020
 code = 'trovato'
-model = models[code]
-currents, colours = current_variables(model, True)
-s = myokit.Simulation(model, protocol)
-s.set_tolerance(1e-8, 1e-8)
-d = s.run(tmax)
-ax = fig.add_subplot(grid[2, 0])
-ax.set_title(fancy_names[code])
-ax.set_xlabel('Time (s)')
-ax.set_yticklabels([])
-ax.set_xlim(0, tmax)
-ax.set_ylim(-1.02, 1.02)
-mp.cumulative_current(d, currents, ax, colors=colours, normalize=True)
+if code in models:
+    model = models[code]
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    plot(code, grid, 0, 2, d, ylabel=None)
+
+#
+# Third row: SAN
+#
 
 #
 # Legend
@@ -222,6 +239,6 @@ labels = [shared.current_names[x] for x in current_colours]
 ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
 
 # Show / store
-plt.savefig('purkinje.png')
-plt.savefig('purkinje.pdf')
+plt.savefig('purkinje-and-san.png')
+plt.savefig('purkinje-and-san.pdf')
 print('Done')

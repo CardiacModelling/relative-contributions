@@ -35,13 +35,6 @@ model_names = {
     'kernik': 'kernik-2019.mmt',
 }
 
-fancy_names = {
-    'paci-2013': 'Paci et al. 2013 (ventricular)',
-    'paci-2018': 'Paci et al. 2018',
-    'paci-2020': 'Paci et al. 2020',
-    'kernik': 'Kernik et al. 2019',
-}
-
 
 def current_variables(model, colours=False):
     """ Returns an ordered list of transmembrane current variable names. """
@@ -120,13 +113,17 @@ for name, fname in model_names.items():
     model = myokit.load_model(os.path.join('models', 'c', fname))
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
+print('Finished preparation.\nPreparing plots')
+
 
 # Maximum time to show in plots
 tmax = 800
 
+
 def text(ax, x, y, t, c='w'):
     ax.text(x, y, t, color=c, transform=ax.transAxes, fontweight='bold',
             horizontalalignment='right', verticalalignment='center')
+
 
 # Create figure
 fig = plt.figure(figsize=(9, 9))
@@ -144,7 +141,7 @@ s = myokit.Simulation(model, protocol)
 s.set_tolerance(1e-8, 1e-8)
 d = s.run(tmax)
 ax = fig.add_subplot(grid[0, 0])
-ax.set_title(fancy_names[code])
+ax.set_title(model.meta['display_name'])
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
@@ -159,7 +156,7 @@ s = myokit.Simulation(model, protocol)
 s.set_tolerance(1e-8, 1e-8)
 d = s.run(tmax)
 ax = fig.add_subplot(grid[0, 1])
-ax.set_title(fancy_names[code])
+ax.set_title(model.meta['display_name'])
 ax.set_xlabel('Time (s)')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
@@ -173,7 +170,7 @@ s = myokit.Simulation(model, protocol)
 s.set_tolerance(1e-8, 1e-8)
 d = s.run(tmax)
 ax = fig.add_subplot(grid[0, 2])
-ax.set_title(fancy_names[code])
+ax.set_title(model.meta['display_name'])
 ax.set_xlabel('Time (s)')
 ax.set_xlim(0, tmax)
 ax.set_ylim(-1.02, 1.02)
@@ -190,7 +187,7 @@ s = myokit.Simulation(model, protocol)
 s.set_tolerance(1e-8, 1e-8)
 d = s.run(tmax)
 ax = fig.add_subplot(grid[1, 0])
-ax.set_title(fancy_names[code])
+ax.set_title(model.meta['display_name'])
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Relative contribution')
 ax.set_xlim(0, tmax)
