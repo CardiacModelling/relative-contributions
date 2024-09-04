@@ -12,7 +12,7 @@ current_colours = {
     'I_Kr': 0,
     'I_Ks': 1,
     'I_to': 2,
-    'I_Kb': 3,
+    'I_Kp': 3,
     'I_f': 8,
     'I_Kur': 9,
     'I_K1': 4,
@@ -29,13 +29,14 @@ current_colours = {
     'I_Ca,P': 13,
     'I_K,ACh': 18,
     'I_K,ATP': 19,
+    'I_SK': 19,
 }
 
 current_names = {
     'I_Kr': 'IKr',
     'I_Ks': 'IKs',
-    'I_to': 'Ito (+Isus)',
-    'I_Kb': 'IKb (IbK)',
+    'I_to': 'Ito',
+    'I_Kp': 'IK,P / IK,B',
     'I_f': 'If',
     'I_Kur': 'IKur',
     'I_K1': 'IK1',
@@ -44,14 +45,16 @@ current_names = {
     'I_NaL': 'INaL',
     'I_CaL': 'ICaL',
     'I_CaT': 'ICaT',
-    'I_NaCa': 'INaCa (INCX)',
+    'I_NaCa': 'INaCa',
     'I_Na,B': 'INa,B',
     'I_Ca,B': 'ICa,B',
     'I_ClCa': 'IClCa',
     'I_Cl,B': 'ICl,B',
-    'I_Ca,P': 'ICa,P (IpCa)',
+    'I_Ca,P': 'ICa,P',
+    'I_K,B': 'IK,B',
     'I_K,ACh': 'IK,ACh',
     'I_K,ATP': 'IK,ATP',
+    'I_SK': 'I,SK',
 }
 
 
@@ -88,12 +91,15 @@ def prepare_model(model, protocol, currents, pre_pace=True):
                 'No unit set for ' + str(C) + ' in ' + str(model))
         helpers.append(C.rhs())
 
+    # Get cellular_current variable
+    i_ion = model.labelx('cellular_current')
+
     # Convert variable units
     i_unit = myokit.parse_unit('A/F')
     if v.unit() != myokit.units.mV:
         print(f'Converting {v} to mV')
         v.convert_unit('mV')
-    for qname in currents:
+    for qname in currents + [i_ion.qname()]:
         var = model.get(qname)
         if var.unit() is None:
             raise ValueError(

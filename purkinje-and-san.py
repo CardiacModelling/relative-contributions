@@ -3,11 +3,12 @@
 # Relative contributions of the major ionic currents in human atrial models.
 #
 import os
+
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
 import myokit
 import myokit.lib.plots as mp
+import numpy as np
 
 import shared
 
@@ -20,17 +21,19 @@ matplotlib.rcParams['mathtext.default'] = 'regular'
 # Current colors
 cmap = matplotlib.colormaps['tab20']
 current_colours = dict(shared.current_colours)
-del(current_colours['I_Kur'])
 del(current_colours['I_ClCa'])
 del(current_colours['I_Cl,B'])
-del(current_colours['I_K,ACh'])
 del(current_colours['I_K,ATP'])
+current_names = dict(shared.current_names)
+current_names['I_to'] = 'Ito (+Isus)'
 
 # Human atrial models
 model_names = {
     'sampson': 'sampson-2010.mmt',
     'stewart': 'stewart-2009.mmt',
     'trovato': 'trovato-2020.mmt',
+    'fabbri': 'fabbri-2017.mmt',
+    'loewe': 'loewe-2019.mmt',
 }
 
 
@@ -57,7 +60,7 @@ def current_variables(model, colours=False):
             'I_to': 'ito.i_to_total',
             'I_Kr': 'ikr.i_Kr',
             'I_Ks': 'iks.i_Ks',
-            'I_Kb': 'ipk.i_p_K',
+            'I_Kp': 'ipk.i_p_K',
             'I_f': 'if.i_f_total',
             'I_K1': 'ik1.i_K1',
             'I_NaK': 'inak.i_NaK',
@@ -85,7 +88,35 @@ def current_variables(model, colours=False):
             'I_Ca,P': 'ipca.IpCa',
             'I_Na': 'ina.INa',
         }
-
+    elif 'fabbri' in name:
+        currents = {
+            'I_Kur': 'ikur.IKur',
+            'I_to': 'ito.Ito',
+            'I_Kr': 'ikr.IKr',
+            'I_Ks': 'iks.IKs',
+            'I_f': 'if.If',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL',
+            'I_CaT': 'icat.ICaT',
+            'I_NaCa': 'inaca.INaCa',
+            'I_K,ACh': 'ikach.IKACh',
+            'I_Na': 'ina.INa',
+        }
+    elif 'loewe' in name:
+        currents = {
+            'I_Kur': 'ikur.IKur',
+            'I_to': 'ito.Ito',
+            'I_Kr': 'ikr.IKr',
+            'I_Ks': 'iks.IKs',
+            'I_f': 'if.If',
+            'I_NaK': 'inak.INaK',
+            'I_CaL': 'ical.ICaL',
+            'I_CaT': 'icat.ICaT',
+            'I_NaCa': 'inaca.INaCa',
+            'I_K,ACh': 'ikach.IKACh',
+            'I_SK': 'isk.ISK',
+            'I_Na': 'ina.INa',
+        }
     else:
         currents = shared.guess_currents(model)
         print('\n'.join(currents))
@@ -135,12 +166,15 @@ for name, fname in model_names.items():
         v.set_rhs('ito.Ito + isus.Isus')
 
     pre_pace = True
-    if 'stewart' in name:
+    if 'stewart' in name or 'fabbri' in name or 'loewe' in name:
         # 2024-09-03 Stewart model destabilises when pre-paced
+        # 2024-09-04 Fabbri and Loewe don't take on CL used by method!
         pre_pace = False
 
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
+    model.labelx('g_Kr')
+
 print('Finished preparation.\nPreparing plots')
 
 
@@ -153,20 +187,40 @@ def text(ax, x, y, t, c='w'):
             horizontalalignment='right', verticalalignment='center')
 
 
-def plot(code, grid, i, j, d, ylabel='Relative contribution'):
-    gr = grid[i, j].subgridspec(4, 1, hspace=0)
+def plot(grid, code, ylabel='Relative contribution', legend=False, v2=True):
 
-    # V and CaT
+    model = models[code]
+    print(f'+ {model.meta["display_name"]}')
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    s.reset()
+    if v2:
+        g = model.labelx('g_Kr')
+        s.set_constant(g.qname(), 0.3 * g.eval())
+        e = s.run(tmax)
+
+    # V
+    v = model.labelx('membrane_potential')
+    gr = grid.subgridspec(4, 1, hspace=0)
     ax = fig.add_subplot(gr[0, 0])
     ax.set_title(model.meta['display_name'])
     ax.set_xticklabels([])
-    ax.plot(d.time(), d['membrane.V'], 'k')
+    ax.plot(d.time(), d[v], 'k', label='Baseline')
+    if v2:
+        ax.plot(e.time(), e[v], 'k--', label='30% IKr')
     ax.set_xlim(0, tmax)
     ax.set_ylim(-95, 45)
     ax.set_yticks([-80, -40, 0, 40])
-    #ax.set_yticklabels([None, -40, 0, 40])
+    if legend and v2:
+        ax.legend(loc='upper right', frameon=False)
 
-    #ax = ax.secondary_yaxis()
+    # Total current
+    #k = model.labelx('cellular_current').qname()
+    #ax2 = ax.twinx()
+    #ax2.set_ylim(-0.1, 0.85)
+    #ax2.plot(d.time(), d[k], 'r')
 
     # Contributions
     ax = fig.add_subplot(gr[1:, 0])
@@ -185,48 +239,15 @@ def plot(code, grid, i, j, d, ylabel='Relative contribution'):
 # Create figure
 fig = plt.figure(figsize=(9, 12.5))
 fig.subplots_adjust(0.067, 0.035, 0.98, 0.98, hspace=0.35, wspace=0.25)
-grid = GridSpec(4, 3)
+grid = fig.add_gridspec(4, 3)
 
-#
-# Top row: Purkinje
-#
-# Stewart 2009
-code = 'stewart'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 0, d)
+plot(grid[0, 0], 'stewart', legend=True)
+plot(grid[0, 1], 'sampson', ylabel=None)
+plot(grid[0, 2], 'trovato', ylabel=None)
+plot(grid[3, 0], 'fabbri', v2=False)
+plot(grid[3, 1], 'loewe', v2=False)
 
-# Sampson 2010
-code = 'sampson'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 1, d, ylabel=None)
-
-# Trovato 2020
-code = 'trovato'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 2, d, ylabel=None)
-
-#
-# Third row: SAN
-#
-
-#
 # Legend
-#
 ax = fig.add_subplot(grid[1, 2])
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
@@ -234,7 +255,7 @@ ax.set_frame_on(False)
 lines = []
 for current, i in current_colours.items():
     lines.append(matplotlib.lines.Line2D([0], [0], color=cmap(i), lw=5))
-labels = [shared.current_names[x] for x in current_colours]
+labels = [current_names[x] for x in current_colours]
 #ax.legend(lines, labels, loc=(0.05, 0.05), ncol=2)
 ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
 

@@ -4,11 +4,12 @@
 # models.
 #
 import os
+
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
 import myokit
 import myokit.lib.plots as mp
+import numpy as np
 
 import shared
 
@@ -24,6 +25,7 @@ current_colours = dict(shared.current_colours)
 del(current_colours['I_f'])
 del(current_colours['I_Kur'])
 del(current_colours['I_CaT'])
+del(current_colours['I_SK'])
 
 # Human atrial models
 model_names = {
@@ -88,7 +90,7 @@ def current_variables(model, colours=False):
             'I_Cl,B': 'iclb.IClB',
             'I_ClCa': 'iclca.IClCa',
             'I_to': 'ito.Ito',
-            'I_Kb': 'ikp.IKp',
+            'I_Kp': 'ikp.IKp',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_Ca,P': 'ipca.IpCa',
@@ -104,7 +106,7 @@ def current_variables(model, colours=False):
         currents = {
             'I_NaCa': 'inaca.INaCa',
             'I_to': 'ito.Ito',
-            'I_Kb': 'ipk.IpK',
+            'I_Kp': 'ipk.IpK',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_K1': 'ik1.IK1',
@@ -118,7 +120,7 @@ def current_variables(model, colours=False):
     elif 'tusscher-2006' in name:
         currents = {
             'I_to': 'ito.Ito',
-            'I_Kb': 'ipk.IpK',
+            'I_Kp': 'ipk.IpK',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_K1': 'ik1.IK1',
@@ -133,7 +135,7 @@ def current_variables(model, colours=False):
     elif 'ohara-2011' in name:
         currents = {
             'I_to': 'ito.Ito',
-            'I_Kb': 'ikb.IKb',
+            'I_Kp': 'ikb.IKb',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_Ca,P': 'ipca.IpCa',
@@ -149,7 +151,7 @@ def current_variables(model, colours=False):
     elif 'dutta-2017' in name:
         currents = {
             'I_to': 'ito.Ito',
-            'I_Kb': 'ikb.IKb',
+            'I_Kp': 'ikb.IKb',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_Ca,P': 'ipca.IpCa',
@@ -167,7 +169,7 @@ def current_variables(model, colours=False):
             'I_Cl,B': 'iclb.IClb',
             'I_ClCa': 'iclca.IClCa',
             'I_to': 'ito.Ito',
-            'I_Kb': 'ikb.IKb',
+            'I_Kp': 'ikb.IKb',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_K,ATP': 'ikatp.IKatp',
@@ -184,7 +186,7 @@ def current_variables(model, colours=False):
     elif 'fink-2008' in name:
         currents = {
             'I_to': 'ito.i_to',
-            'I_Kb': 'ipk.i_p_K',
+            'I_Kp': 'ipk.i_p_K',
             'I_Ks': 'iks.i_Ks',
             'I_Kr': 'ikr.i_Kr',
             'I_K1': 'ik1.i_K1',
@@ -201,7 +203,7 @@ def current_variables(model, colours=False):
             'I_Cl,B': 'iclb.IClB',
             'I_ClCa': 'iclca.IClCa',
             'I_to': 'ito.Ito',
-            'I_Kb': 'ikp.IKp',
+            'I_Kp': 'ikp.IKp',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_Ca,P': 'ipca.IpCa',
@@ -216,7 +218,7 @@ def current_variables(model, colours=False):
     elif 'bartolucci-2020' in name:
         currents = {
             'I_to': 'ito.Ito',
-            'I_Kb': 'ikb.IKb',
+            'I_Kp': 'ikb.IKb',
             'I_Ks': 'iks.IKs',
             'I_Kr': 'ikr.IKr',
             'I_Ca,P': 'ipca.IpCa',
@@ -260,6 +262,7 @@ for name, fname in model_names.items():
         model.get(k).set_rhs(v)
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
+    model.labelx('g_Kr')
 print('Finished preparation.\nPreparing plots')
 
 
@@ -272,24 +275,43 @@ def text(ax, x, y, t, c='w'):
             horizontalalignment='right', verticalalignment='center')
 
 
-def plot(code, grid, i, j, d, ylabel='Relative contribution'):
-    gr = grid[i, j].subgridspec(4, 1, hspace=0)
+def plot(grid, code, ylabel='Relative contribution', legend=False):
 
-    # V and CaT
+    model = models[code]
+    print(f'+ {model.meta["display_name"]}')
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    s.reset()
+    g = model.labelx('g_Kr')
+    s.set_constant(g.qname(), 0.3 * g.eval())
+    e = s.run(tmax)
+
+    # V
+    v = model.labelx('membrane_potential')
+    gr = grid.subgridspec(4, 1, hspace=0)
     ax = fig.add_subplot(gr[0, 0])
+    ax.set_ylabel('V (mV)')
     ax.set_title(model.meta['display_name'])
     ax.set_xticklabels([])
-    ax.plot(d.time(), d['membrane.V'], 'k')
+    ax.plot(d.time(), d[v], 'k', label='baseline')
+    ax.plot(e.time(), e[v], 'k--', label='30% IKr')
     ax.set_xlim(0, tmax)
     ax.set_ylim(-95, 45)
     ax.set_yticks([-80, -40, 0, 40])
-    #ax.set_yticklabels([None, -40, 0, 40])
+    if legend:
+        ax.legend(loc='upper right', frameon=False)
 
-    #ax = ax.secondary_yaxis()
+    # Total current
+    #k = model.labelx('cellular_current').qname()
+    #ax2 = ax.twinx()
+    #ax2.set_ylim(-0.2, 1.6)
+    #ax2.plot(d.time(), d[k], 'r')
 
     # Contributions
     ax = fig.add_subplot(gr[1:, 0])
-    ax.set_xlabel('Time (s)')
+    ax.set_xlabel('Time (ms)')
     ax.set_ylabel(ylabel)
     ax.set_xlim(0, tmax)
     ax.set_ylim(-1.02, 1.02)
@@ -304,133 +326,21 @@ def plot(code, grid, i, j, d, ylabel='Relative contribution'):
 # Create figure
 fig = plt.figure(figsize=(9, 12.5))
 fig.subplots_adjust(0.067, 0.035, 0.98, 0.98, hspace=0.35, wspace=0.25)
-grid = GridSpec(4, 3)
+grid = fig.add_gridspec(4, 3)
 
-#
-# Top row: Various models
-#
-# Priebe & Beuckelmann 1998
-code = 'priebe'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 0, d)
+plot(grid[0, 0], 'priebe', legend=True)
+plot(grid[0, 1], 'iyer', ylabel=None)
+plot(grid[1, 0], 'tnnp')
+plot(grid[1, 1], 'tp', ylabel=None)
+plot(grid[1, 2], 'fink', ylabel=None)
+plot(grid[2, 0], 'grandi')
+plot(grid[2, 1], 'carro', ylabel=None)
+plot(grid[3, 0], 'ohara')
+#plot(grid[3, 1], 'cipa', ylabel=None)
+plot(grid[3, 1], 'tomek', ylabel=None)
+plot(grid[3, 2], 'bartolucci', ylabel=None)
 
-
-# Iyer et al. 2004
-code = 'iyer'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 1, d, ylabel=None)
-
-#
-# Second row: Ten Tusscher & Panfilov models
-#
-# TNNP 2004
-code = 'tnnp'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 1, 0, d)
-
-# TP 2006
-code = 'tp'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 1, 1, d, ylabel=None)
-
-# Fink 2008
-code = 'fink'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 1, 2, d, ylabel=None)
-
-#
-# Third row: Grandi models
-#
-# Grandi 2010
-code = 'grandi'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 2, 0, d)
-
-code = 'carro'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 2, 1, d)
-
-#
-# Fourth row: O'Hara models
-#
-# O'Hara et al. 2011
-code = 'ohara'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 3, 0, d)
-
-# O'Hara et al. 2017 CiPA update
-code = 'cipa'
-if code in models and False:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 3, 1, d, ylabel=None)
-
-# Tomek et al. 2020
-code = 'tomek'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 3, 1, d, ylabel=None)
-
-# Bartolucci et al. 2022
-code = 'bartolucci'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 3, 2, d, ylabel=None)
-
-#
 # Legend
-#
 ax = fig.add_subplot(grid[0, 2])
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
@@ -441,7 +351,6 @@ for current, i in current_colours.items():
 labels = [shared.current_names[x] for x in current_colours]
 ax.legend(lines, labels, loc=(-0.13, 0.05), ncol=2)
 #ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
-
 
 # Show / store
 plt.savefig('ventricular.png')

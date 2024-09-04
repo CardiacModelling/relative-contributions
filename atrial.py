@@ -3,11 +3,12 @@
 # Relative contributions of the major ionic currents in human atrial models.
 #
 import os
+
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
 import myokit
 import myokit.lib.plots as mp
+import numpy as np
 
 import shared
 
@@ -22,6 +23,7 @@ cmap = matplotlib.colormaps['tab20']
 current_colours = dict(shared.current_colours)
 del(current_colours['I_CaT'])
 del(current_colours['I_K,ATP'])
+del(current_colours['I_SK'])
 
 # Human atrial models
 model_names = {
@@ -133,7 +135,7 @@ def current_variables(model, colours=False):
             'I_Ca,B': 'icab.ICaB',
             'I_Na,B': 'inab.INaB',
             'I_ClCa': 'iclca.IClCa',
-            'I_Kb': 'ikp.IKp',
+            'I_Kp': 'ikp.IKp',
             'I_Na': 'ina.INa',
             'I_NaL': 'inal.INaL',
         }
@@ -153,7 +155,7 @@ def current_variables(model, colours=False):
             'I_Na,B': 'inab.INaB',
             'I_K,ACh': 'ikach.IKACh',
             'I_ClCa': 'iclca.IClCa',
-            'I_Kb': 'ikp.IKp',
+            'I_Kp': 'ikp.IKp',
             'I_Na': 'ina.INa',
             'I_NaL': 'inal.INaL',
         }
@@ -170,7 +172,7 @@ def current_variables(model, colours=False):
             'I_Ca,P': 'ipca.IpCa',
             'I_Ca,B': 'icab.ICab',
             'I_Na,B': 'inab.INab',
-            'I_Kb': 'ipk.IpK',
+            'I_Kp': 'ipk.IpK',
             'I_Na': 'ina.INa',
         }
     elif 'ellinwood' in name:
@@ -189,12 +191,11 @@ def current_variables(model, colours=False):
             'I_Na,B': 'inab.INaB',
             'I_K,ACh': 'ikach.IKACh',
             'I_ClCa': 'iclca.IClCa',
-            'I_Kb': 'ikp.IKp',
+            'I_Kp': 'ikp.IKp',
             'I_Na': 'ina.INa',
         }
     elif 'aguilar' in name:
         currents = {
-            #'I_Cl,B': 'iclb.IClB',
             'I_Kur': 'ikur.IKur',
             'I_to': 'ito.Ito',
             'I_CaL': 'ical.ICaL',
@@ -207,8 +208,6 @@ def current_variables(model, colours=False):
             'I_Ca,B': 'ib.IbCa',
             'I_Na,B': 'ib.IbNa',
             'I_K,ACh': 'ikach.IKACh',
-            #'I_ClCa': 'iclca.IClCa',
-            #'I_Kb': 'ikp.IKp',
             'I_Na': 'ina.INa',
         }
     else:
@@ -240,6 +239,7 @@ for name, fname in model_names.items():
     model = myokit.load_model(os.path.join('models', 'c', fname))
     shared.prepare_model(model, protocol, current_variables(model), pre_pace)
     models[name] = model
+    model.labelx('g_Kur')
 print('Finished preparation.\nPreparing plots')
 
 
@@ -252,20 +252,45 @@ def text(ax, x, y, t, c='w'):
             horizontalalignment='right', verticalalignment='center')
 
 
-def plot(code, grid, i, j, d, ylabel='Relative contribution'):
-    gr = grid[i, j].subgridspec(4, 1, hspace=0)
+def plot(grid, code, ylabel='Relative contribution', legend=False):
 
-    # V and CaT
+    model = models[code]
+    print(f'+ {model.meta["display_name"]}')
+    currents, colours = current_variables(model, True)
+    s = myokit.Simulation(model, protocol)
+    s.set_tolerance(1e-8, 1e-8)
+    d = s.run(tmax)
+    s.reset()
+    g = model.labelx('g_Kur')
+    try:
+        s.set_constant(g.qname(), 0.5 * g.eval())
+    except ValueError:
+        print('  Creating second simulation')
+        m2 = model.clone()
+        m2.labelx('g_Kur').set_rhs(0.5 * g.eval())
+        s = myokit.Simulation(m2, protocol)
+        s.set_tolerance(1e-8, 1e-8)
+    e = s.run(tmax)
+
+    # V
+    v = model.labelx('membrane_potential')
+    gr = grid.subgridspec(4, 1, hspace=0)
     ax = fig.add_subplot(gr[0, 0])
     ax.set_title(model.meta['display_name'])
     ax.set_xticklabels([])
-    ax.plot(d.time(), d['membrane.V'], 'k')
+    ax.plot(d.time(), d[v], 'k', label='Baseline')
+    ax.plot(e.time(), e[v], 'k--', label='50% IKur')
     ax.set_xlim(0, tmax)
     ax.set_ylim(-95, 45)
     ax.set_yticks([-80, -40, 0, 40])
-    #ax.set_yticklabels([None, -40, 0, 40])
+    if legend:
+        ax.legend(loc='upper right', frameon=False)
 
-    #ax = ax.secondary_yaxis()
+    # Total current
+    #k = model.labelx('cellular_current').qname()
+    #ax2 = ax.twinx()
+    #ax2.set_ylim(-0.1, 0.85)
+    #ax2.plot(d.time(), d[k], 'r')
 
     # Contributions
     ax = fig.add_subplot(gr[1:, 0])
@@ -284,124 +309,20 @@ def plot(code, grid, i, j, d, ylabel='Relative contribution'):
 # Create figure
 fig = plt.figure(figsize=(9, 12.5))
 fig.subplots_adjust(0.067, 0.035, 0.98, 0.98, hspace=0.35, wspace=0.25)
-grid = GridSpec(4, 3)
+grid = fig.add_gridspec(4, 3)
 
-#
-# Top row: Nygren models
-#
-# Nygren 1998
-code = 'nygren'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 0, d)
+plot(grid[0, 0], 'nygren', legend=True)
+plot(grid[0, 1], 'maleckar', ylabel=None)
+plot(grid[0, 2], 'koivumaki', ylabel=None)
+plot(grid[1, 0], 'courtemanche')
+plot(grid[1, 1], 'ni', ylabel=None)
+plot(grid[1, 2], 'aguilar', ylabel=None)
+plot(grid[2, 0], 'grandi')
+plot(grid[2, 1], 'voigt', ylabel=None)
+plot(grid[2, 2], 'ellinwood', ylabel=None)
+plot(grid[3, 0], 'bai')
 
-# Maleckar 2009
-code = 'maleckar'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 1, d, ylabel=None)
-
-# Koivumaki 2011
-code = 'koivumaki'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 0, 2, d, ylabel=None)
-
-#
-# Second row: Courtemanche models
-#
-# Courtemanche 1998
-code = 'courtemanche'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 1, 0, d)
-
-# Ni 2017
-code = 'ni'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 1, 1, d, ylabel=None)
-
-# Aguilar 2017
-code = 'aguilar'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 1, 2, d, ylabel=None)
-
-#
-# Third row: Grandi models
-#
-# Grandi 2011
-code = 'grandi'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 2, 0, d)
-
-# Voigt 2013
-code = 'voigt'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 2, 1, d, ylabel=None)
-
-# Ellinwood 2017
-code = 'ellinwood'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 2, 2, d, ylabel=None)
-
-#
-# Fourth row: Ten tusscher derived
-#
-
-# Bai 2018
-code = 'bai'
-if code in models:
-    model = models[code]
-    currents, colours = current_variables(model, True)
-    s = myokit.Simulation(model, protocol)
-    s.set_tolerance(1e-8, 1e-8)
-    d = s.run(tmax)
-    plot(code, grid, 3, 0, d)
-
-#
 # Legend
-#
 ax = fig.add_subplot(grid[3, 1])
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
@@ -412,7 +333,6 @@ for current, i in current_colours.items():
 labels = [shared.current_names[x] for x in current_colours]
 ax.legend(lines, labels, loc=(0.05, 0.05), ncol=2)
 #ax.legend(lines, labels, loc=(0.05, -0.7), ncol=1)
-
 
 # Show / store
 plt.savefig('atrial.png')
