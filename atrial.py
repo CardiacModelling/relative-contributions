@@ -252,7 +252,7 @@ def text(ax, x, y, t, c='w'):
             horizontalalignment='right', verticalalignment='center')
 
 
-def plot(grid, code, ylabel='Relative contribution', legend=False):
+def plot(grid, code, ylabel=True, legend=False):
 
     model = models[code]
     print(f'+ {model.meta["display_name"]}')
@@ -277,12 +277,14 @@ def plot(grid, code, ylabel='Relative contribution', legend=False):
     gr = grid.subgridspec(4, 1, hspace=0)
     ax = fig.add_subplot(gr[0, 0])
     ax.set_title(model.meta['display_name'])
-    ax.set_xticklabels([])
-    ax.plot(d.time(), d[v], 'k', label='Baseline')
-    ax.plot(e.time(), e[v], 'k--', label='50% IKur')
+    ax.set_xticks([])
     ax.set_xlim(0, tmax)
     ax.set_ylim(-95, 45)
     ax.set_yticks([-80, -40, 0, 40])
+    ax.plot(d.time(), d[v], 'k', label='Baseline')
+    ax.plot(e.time(), e[v], 'k--', label='50% IKur')
+    if ylabel:
+        ax.set_ylabel('V (mv)')
     if legend:
         ax.legend(loc='upper right', frameon=False)
 
@@ -295,7 +297,8 @@ def plot(grid, code, ylabel='Relative contribution', legend=False):
     # Contributions
     ax = fig.add_subplot(gr[1:, 0])
     ax.set_xlabel('Time (s)')
-    ax.set_ylabel(ylabel)
+    if ylabel:
+        ax.set_ylabel('Relative contribution')
     ax.set_xlim(0, tmax)
     ax.set_ylim(-1.02, 1.02)
     ax.set_yticks([-1, -0.5, 0, 0.5, 1])

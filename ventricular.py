@@ -292,14 +292,15 @@ def plot(grid, code, ylabel='Relative contribution', legend=False):
     v = model.labelx('membrane_potential')
     gr = grid.subgridspec(4, 1, hspace=0)
     ax = fig.add_subplot(gr[0, 0])
-    ax.set_ylabel('V (mV)')
     ax.set_title(model.meta['display_name'])
-    ax.set_xticklabels([])
-    ax.plot(d.time(), d[v], 'k', label='baseline')
-    ax.plot(e.time(), e[v], 'k--', label='30% IKr')
+    ax.set_xticks([])
     ax.set_xlim(0, tmax)
     ax.set_ylim(-95, 45)
     ax.set_yticks([-80, -40, 0, 40])
+    ax.plot(d.time(), d[v], 'k', label='baseline')
+    ax.plot(e.time(), e[v], 'k--', label='30% IKr')
+    if ylabel:
+        ax.set_ylabel('V (mV)')
     if legend:
         ax.legend(loc='upper right', frameon=False)
 
@@ -312,7 +313,8 @@ def plot(grid, code, ylabel='Relative contribution', legend=False):
     # Contributions
     ax = fig.add_subplot(gr[1:, 0])
     ax.set_xlabel('Time (ms)')
-    ax.set_ylabel(ylabel)
+    if ylabel:
+        ax.set_ylabel('Relative contribution')
     ax.set_xlim(0, tmax)
     ax.set_ylim(-1.02, 1.02)
     ax.set_yticks([-1, -0.5, 0, 0.5, 1])
