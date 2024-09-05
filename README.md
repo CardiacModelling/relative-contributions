@@ -38,5 +38,7 @@ Only "human" models are shown.
 
 ## Human models (as of 2024-09-03)
 
+Based on the AP model list at https://github.com/myokit/model-list
+
 ![A graphical overview of models](human-models.png)
 
