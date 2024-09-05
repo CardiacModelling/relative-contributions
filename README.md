@@ -14,9 +14,9 @@ Only "human" models are shown.
 
 ![Human atrial models](./atrial.png)
 
-## Human Purkinje
+## Human Purkinje and SAN
 
-![Human Purkinje models](./purkinje.png)
+![Human Purkinje and SAN models](./purkinje-and-san.png)
 
 ## hIPSC models
 
